@@ -1,7 +1,9 @@
 plugins {
     java
     kotlin("jvm") version "1.4.32"
+    application
     antlr
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "obdd"
@@ -21,6 +23,10 @@ dependencies {
 
 sourceSets.getByName("main").java {
     srcDir("build/generated-src/main/java")
+}
+
+application {
+    mainClassName = "obdd.MainKt"
 }
 
 tasks.generateGrammarSource {
