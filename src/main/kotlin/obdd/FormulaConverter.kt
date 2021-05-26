@@ -43,29 +43,24 @@ object FormulaConverter : FormulaBaseVisitor<Formula>() {
         return And(left, right)
     }
 
-    override fun visitOr_formula(ctx: FormulaParser.Or_formulaContext?): Or {
+    override fun visitOr_xor_formula(ctx: FormulaParser.Or_xor_formulaContext?): Formula {
         val left = ctx!!.formula(0).accept(this)
         val right = ctx.formula(1).accept(this)
-        return Or(left, right)
+        return when(ctx.getChild(1)) {
+            ctx.OR() -> Or(left, right)
+            ctx.XOR() -> Not(Equiv(left, right)) // xor is just syntactic sugar for !(a<=>b)
+            else -> throw RuntimeException("Parse error: Unknown operand in or/xor expression")
+        }
     }
 
-    override fun visitImpl_formula(ctx: FormulaParser.Impl_formulaContext?): Impl {
+    override fun visitImpl_equiv_formula(ctx: FormulaParser.Impl_equiv_formulaContext?): Formula {
         val left = ctx!!.formula(0).accept(this)
         val right = ctx.formula(1).accept(this)
-        return Impl(left, right)
-    }
-
-    override fun visitEquiv_formula(ctx: FormulaParser.Equiv_formulaContext?): Equiv {
-        val left = ctx!!.formula(0).accept(this)
-        val right = ctx.formula(1).accept(this)
-        return Equiv(left, right)
-    }
-
-    // xor is just syntactic sugar for !(a<=>b)
-    override fun visitXor_formula(ctx: FormulaParser.Xor_formulaContext?): Not {
-        val left = ctx!!.formula(0).accept(this)
-        val right = ctx.formula(1).accept(this)
-        return Not(Equiv(left, right))
+        return when(ctx.getChild(1)) {
+            ctx.EQUIV() -> Equiv(left, right)
+            ctx.IMPL() -> Or(Not(left), right) // impl is just syntactic sugar for (!a | b)
+            else -> throw RuntimeException("Parse error: Unknown operand in impl/equiv expression")
+        }
     }
 }
 
