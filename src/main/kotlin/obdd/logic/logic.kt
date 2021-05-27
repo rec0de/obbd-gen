@@ -5,7 +5,7 @@ import java.lang.Exception
 interface Formula {
     fun eval(varMap: Map<String, Boolean>): Boolean
     fun simplify(varMap: Map<String, Boolean>): Formula
-    fun collectVars(): Set<String>
+    fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
 }
 
 class Var(val name: String) : Formula {
@@ -23,7 +23,7 @@ class Var(val name: String) : Formula {
             Var(name)
     }
 
-    override fun collectVars() = setOf(name)
+    override fun computeVarWeights(baseWeight: Int) = mutableMapOf(name to baseWeight)
     override fun toString() = name
 }
 
@@ -31,7 +31,7 @@ object ConstTrue : Formula {
     override fun eval(varMap: Map<String, Boolean>) = true
     override fun simplify(varMap: Map<String, Boolean>) = this
 
-    override fun collectVars() = emptySet<String>()
+    override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
     override fun toString() = "true"
 }
 
@@ -39,7 +39,7 @@ object ConstFalse : Formula {
     override fun eval(varMap: Map<String, Boolean>) = false
     override fun simplify(varMap: Map<String, Boolean>) = this
 
-    override fun collectVars() = emptySet<String>()
+    override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
     override fun toString() = "false"
 }
 
@@ -53,12 +53,22 @@ class Not(val child: Formula) : Formula {
             Not(child.simplify(varMap))
     }
 
-    override fun collectVars() = child.collectVars()
+    override fun computeVarWeights(baseWeight: Int) = child.computeVarWeights(baseWeight)
     override fun toString() = "!${child}"
 }
 
 abstract class BinOp(val left: Formula, val right: Formula) : Formula {
-    override fun collectVars() = left.collectVars() + right.collectVars()
+    override fun computeVarWeights(baseWeight: Int): MutableMap<String,Int> {
+        val leftWeights = left.computeVarWeights(baseWeight / 2)
+        val rightWeights = right.computeVarWeights(baseWeight / 2)
+
+        rightWeights.forEach {
+            val leftValue = leftWeights.getOrDefault(it.key, 0)
+            leftWeights[it.key] = leftValue + it.value
+        }
+
+        return leftWeights
+    }
 }
 
 class And(left : Formula, right: Formula) : BinOp(left, right) {

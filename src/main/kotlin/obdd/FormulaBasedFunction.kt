@@ -5,7 +5,7 @@ import de.tu_darmstadt.rs.logictool.common.representation.Variable
 import obdd.logic.Formula
 
 class FormulaBasedFunction(val formula: Formula) : BooleanFunction {
-    private val vars = formula.collectVars()
+    private val vars = formula.computeVarWeights(Int.MAX_VALUE).keys
     private val libVarArray = vars.withIndex().map { Variable(it.value, it.index) }.toTypedArray()
 
     override fun getName() = "Formula-based function for: $formula"
