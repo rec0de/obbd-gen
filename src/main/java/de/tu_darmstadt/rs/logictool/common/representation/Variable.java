@@ -1,5 +1,7 @@
 package de.tu_darmstadt.rs.logictool.common.representation;
 
+// Test
+
 /**
  * A variable/input of a boolean function.
  */
