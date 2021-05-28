@@ -135,4 +135,33 @@ public class BddFactory {
             createChildren(child);
         }
     }
+
+    /**
+     * Prints out a BDD-graph as a .dot-file.
+     */
+    public void printGraph(){
+        try(BufferedWriter out=new BufferedWriter(new OutputStreamWriter(new FileOutputStream("g.dot")))){
+            out.write("digraph {");
+            out.newLine();
+            out.write("name [label=" + this.function.getName() + "] [shape = box];");
+            out.newLine();
+            out.write(this.bdd.getZeroNode().getVariable().getName() + " [shape = box];");
+            out.newLine();
+            out.write(this.bdd.getOneNode().getVariable().getName() + " [shape = box];");
+            out.newLine();
+            out.write("name -> " + this.bdd.getRootNode().getVariable().getName() + ";");
+            out.newLine();
+            for(BddNode node : this.bdd.getNodes()){
+                if(node.getZeroChild() != null) {
+                    out.write(node.getVariable().getName() + " -> " + node.getZeroChild().getVariable().getName() + " [style=dotted];");
+                    out.newLine();
+                }
+                if(node.getOneChild() != null) {
+                    out.write(node.getVariable().getName() + " -> " + node.getOneChild().getVariable().getName() + ";");
+                    out.newLine();
+                }
+            }
+            out.write("}");
+        }
+    }
 }
