@@ -100,10 +100,13 @@ class Or(left : Formula, right: Formula) : BinOp(left, right) {
     }
 
     override fun simplify(varMap: Map<String, Boolean>): Formula {
-        return when(val leftSim = left.simplify(varMap)) {
-            ConstTrue -> ConstTrue
-            ConstFalse -> right.simplify(varMap)
-            else -> Or(leftSim, right.simplify(varMap))
+        val leftSim = left.simplify(varMap)
+        val rightSim = right.simplify(varMap)
+        return when {
+            leftSim == ConstTrue || rightSim == ConstTrue -> ConstTrue
+            leftSim == ConstFalse -> rightSim
+            rightSim == ConstFalse -> leftSim
+            else -> Or(leftSim, rightSim)
         }
     }
 
