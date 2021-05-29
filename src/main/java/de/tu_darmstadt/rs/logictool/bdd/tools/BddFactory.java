@@ -48,10 +48,10 @@ public class BddFactory {
         // check if each variable from the function is contained in the order
         outerLoop: for (Variable var : function.getVariables()) {
             for (Variable otherVar : order) {
-                if (var == otherVar)
+                if (var.getName().equals(otherVar.getName()))
                     continue outerLoop;
             }
-            throw new IllegalArgumentException("The order does not contain the variable " + var + ".");
+            throw new IllegalArgumentException("The order does not contain the variable " + var.getName() + ".");
         }
 
         return createInternal(function, order);
