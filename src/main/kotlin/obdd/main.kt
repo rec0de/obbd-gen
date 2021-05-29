@@ -38,5 +38,6 @@ fun main(args: Array<String>) {
         else
             BddBuilder.create(formula, order)
 
-    println(bdd) // TODO: produce usable representation
+    //println(bdd) // TODO: produce usable representation
+    DotSerializer.writeToFile(bdd, "g.dot")
 }
