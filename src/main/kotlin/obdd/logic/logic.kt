@@ -4,8 +4,9 @@ import java.lang.Exception
 
 interface Formula {
     fun eval(varMap: Map<String, Boolean>): Boolean
-    fun simplify(varMap: Map<String, Boolean>): Formula
+    fun simplify(varName: String, interpretation: Boolean): Formula
     fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
+    fun synEq(other: Formula): Boolean
 }
 
 class Var(val name: String) : Formula {
@@ -16,11 +17,15 @@ class Var(val name: String) : Formula {
             throw Exception("Variable assignment does not contain value for '$name'")
     }
 
-    override fun simplify(varMap: Map<String, Boolean>): Formula {
-        return if(varMap.containsKey(name))
-            if(varMap[name]!!) ConstTrue else ConstFalse
+    override fun simplify(varName: String, interpretation: Boolean): Formula {
+        return if(varName == name)
+            if(interpretation) ConstTrue else ConstFalse
         else
             Var(name)
+    }
+
+    override fun synEq(other: Formula): Boolean {
+        return other is Var && other.name == name
     }
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf(name to baseWeight)
@@ -29,7 +34,9 @@ class Var(val name: String) : Formula {
 
 object ConstTrue : Formula {
     override fun eval(varMap: Map<String, Boolean>) = true
-    override fun simplify(varMap: Map<String, Boolean>) = this
+    override fun simplify(varName: String, interpretation: Boolean) = this
+
+    override fun synEq(other: Formula) = other == this
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
     override fun toString() = "true"
@@ -37,7 +44,9 @@ object ConstTrue : Formula {
 
 object ConstFalse : Formula {
     override fun eval(varMap: Map<String, Boolean>) = false
-    override fun simplify(varMap: Map<String, Boolean>) = this
+    override fun simplify(varName: String, interpretation: Boolean) = this
+
+    override fun synEq(other: Formula) = other == this
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
     override fun toString() = "false"
@@ -46,12 +55,14 @@ object ConstFalse : Formula {
 class Not(val child: Formula) : Formula {
     override fun eval(varMap: Map<String, Boolean>) = !child.eval(varMap)
 
-    override fun simplify(varMap: Map<String, Boolean>): Formula {
+    override fun simplify(varName: String, interpretation: Boolean): Formula {
         return if(child is Not)
-            child.child.simplify(varMap)
+            child.child.simplify(varName, interpretation)
         else
-            Not(child.simplify(varMap))
+            Not(child.simplify(varName, interpretation))
     }
+
+    override fun synEq(other: Formula) = other is Not && child.synEq(other.child)
 
     override fun computeVarWeights(baseWeight: Int) = child.computeVarWeights(baseWeight)
     override fun toString() = "!${child}"
@@ -76,13 +87,13 @@ class And(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) && right.eval(varMap)
     }
 
-    override fun simplify(varMap: Map<String, Boolean>): Formula {
-        val leftSim = left.simplify(varMap)
+    override fun simplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(varName, interpretation)
 
         if(leftSim == ConstFalse)
             return ConstFalse
 
-        val rightSim = right.simplify(varMap)
+        val rightSim = right.simplify(varName, interpretation)
 
         return when {
             rightSim == ConstFalse -> ConstFalse
@@ -90,6 +101,8 @@ class And(left : Formula, right: Formula) : BinOp(left, right) {
             else -> And(leftSim, rightSim)
         }
     }
+
+    override fun synEq(other: Formula) = other is And && left.synEq(other.left) && right.synEq(other.right)
 
     override fun toString() = "(${left} & ${right})"
 }
@@ -99,9 +112,9 @@ class Or(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) || right.eval(varMap)
     }
 
-    override fun simplify(varMap: Map<String, Boolean>): Formula {
-        val leftSim = left.simplify(varMap)
-        val rightSim = right.simplify(varMap)
+    override fun simplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(varName, interpretation)
+        val rightSim = right.simplify(varName, interpretation)
         return when {
             leftSim == ConstTrue || rightSim == ConstTrue -> ConstTrue
             leftSim == ConstFalse -> rightSim
@@ -109,6 +122,8 @@ class Or(left : Formula, right: Formula) : BinOp(left, right) {
             else -> Or(leftSim, rightSim)
         }
     }
+
+    override fun synEq(other: Formula) = other is Or && left.synEq(other.left) && right.synEq(other.right)
 
     override fun toString() = "(${left} | ${right})"
 }
@@ -118,9 +133,9 @@ class Equiv(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) == right.eval(varMap)
     }
 
-    override fun simplify(varMap: Map<String, Boolean>): Formula {
-        val leftSim = left.simplify(varMap)
-        val rightSim = right.simplify(varMap)
+    override fun simplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(varName, interpretation)
+        val rightSim = right.simplify(varName, interpretation)
 
         return when {
             leftSim == rightSim -> ConstTrue
@@ -129,6 +144,8 @@ class Equiv(left : Formula, right: Formula) : BinOp(left, right) {
             else -> Equiv(leftSim, rightSim)
         }
     }
+
+    override fun synEq(other: Formula) = other is Equiv && left.synEq(other.left) && right.synEq(other.right)
 
     override fun toString() = "(${left} <=> ${right})"
 }

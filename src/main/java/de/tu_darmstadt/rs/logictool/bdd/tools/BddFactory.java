@@ -5,6 +5,12 @@ import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode;
 import de.tu_darmstadt.rs.logictool.common.representation.BooleanFunction;
 import de.tu_darmstadt.rs.logictool.common.representation.Variable;
 
+/*
+    I think this implementation is fundamentally flawed in how it handles nonstandard variable orders
+    (because the BooleanFunction interface only receives a Boolean array and is unaware of any re-orderings,
+    meaning that the evaluation order is essentially always the same, no matter what the Factory thinks)
+ */
+
 /**
  * Factory for a BDD. The resulting BDD is not reduced.
  * This class is not thread safe.

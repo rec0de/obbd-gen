@@ -1,6 +1,5 @@
 package obdd
 
-import de.tu_darmstadt.rs.logictool.bdd.tools.BddFactory
 import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
 
 fun main(args: Array<String>) {
@@ -46,7 +45,7 @@ fun main(args: Array<String>) {
 
     // Create bdd from formula
     val bdd = if(naiveEval)
-            BddFactory().create(FormulaBasedFunction(formula), genOrder(order))
+            NaiveBddBuilder().create(formula, order)
         else
             BddBuilder.create(formula, order)
 

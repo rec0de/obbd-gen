@@ -13,9 +13,11 @@ import obdd.logic.Formula
  */
 object BddBuilder {
 
+    private const val SYN_EQ = true
+
     fun create(formula: Formula, stringOrder: List<String>) : Bdd {
         val order = genOrder(stringOrder)
-        val simplified = formula.simplify(emptyMap())
+        val simplified = formula.simplify("", false) // Perform generic simplification
 
         val bdd = Bdd(order)
 
@@ -31,10 +33,9 @@ object BddBuilder {
     private fun createSplit(bdd: Bdd, formula: Formula, order: Array<Variable>, vi: Int) : BddNode {
         val variable = order[vi]
         val node = BddNode(variable)
-        bdd.nodes.add(node)
 
         // One branch
-        val oneFormula = formula.simplify(mapOf(variable.name to true))
+        val oneFormula = formula.simplify(variable.name, true)
 
         node.oneChild = when(oneFormula) {
             ConstTrue -> bdd.oneNode
@@ -43,7 +44,11 @@ object BddBuilder {
         }
 
         // Zero branch
-        val zeroFormula = formula.simplify(mapOf(variable.name to false))
+        val zeroFormula = formula.simplify(variable.name, false)
+
+        // if both branch formulas are syntactically equal, the subtrees will be equal as well
+        if(SYN_EQ && oneFormula.synEq(zeroFormula))
+            return node.oneChild
 
         node.zeroChild = when(zeroFormula) {
             ConstTrue -> bdd.oneNode
@@ -51,6 +56,7 @@ object BddBuilder {
             else -> createSplit(bdd, zeroFormula, order, vi + 1)
         }
 
+        bdd.nodes.add(node)
         return node
     }
 }
