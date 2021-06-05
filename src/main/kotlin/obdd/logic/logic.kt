@@ -56,10 +56,12 @@ class Not(val child: Formula) : Formula {
     override fun eval(varMap: Map<String, Boolean>) = !child.eval(varMap)
 
     override fun simplify(varName: String, interpretation: Boolean): Formula {
-        return if(child is Not)
-            child.child.simplify(varName, interpretation)
-        else
-            Not(child.simplify(varName, interpretation))
+        return when (val childSim = child.simplify(varName, interpretation)) {
+            ConstTrue -> ConstFalse
+            ConstFalse -> ConstTrue
+            is Not -> childSim.child
+            else -> Not(childSim)
+        }
     }
 
     override fun synEq(other: Formula) = other is Not && child.synEq(other.child)
