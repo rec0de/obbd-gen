@@ -1,0 +1,500 @@
+i | !k & !c
+true ^ a => o | e & n
+d | !(!a | a & l) & d | !e <-> h
+c ^ !false -> b
+(((h)) <=> e ^ !o & i | b | !j & !a) | n -> ((h ^ (a) -> i) & a & !e & o & false => n | m | o & (!n & !n & (o => c ^ m) -> (!e & a | !a ^ (!(true) & (b & g ^ h)) <-> c & (c | g | e <-> true & !i)) & true) & !b & false)
+m ^ !n & !e
+e ^ n | l & ((!i & true <-> !false & (o)) | e | (true | !h))
+m & m ^ (true | m) & !f & j & e | e
+b | f | false & !a ^ a <-> !e
+!n & (!o) & c ^ n
+m & !true | b <=> (c & b ^ i & !o)
+(o & !k <=> true) | k ^ !false
+h ^ o => f | !p
+d & j & !b & p ^ f ^ true
+!d -> !true
+(!o & !(!p) & false) <-> m | !d & l
+o & i & i | !j & (a => !n) <=> d & (h) ^ !j & h & (d <-> e)
+true ^ h | h
+(n) & !false & h & (l | !p => !d | !m | f & f & b & !m & !false & false & true & e & a & h) & h & k | true & k & !(true & h & h) -> !p
+!(!g & h <=> !(false <-> l) | !g) & (a & c) & c & true | c
+j ^ true | b <-> n & !n
+n ^ !f & !(!l & k)
+!true & (!(n | !d) <=> false & h)
+c & (b & d | false & c & !(!f <-> !((!i ^ !o & a ^ i) & (f) & b <=> g) ^ (!(j) & !f & e ^ d & !(l ^ !(!(l))) <-> p & !o & k ^ !((l | !i) | d) | g & a) & !f & (true & (!j) & (i) & !(a | !(!(k | o => g ^ !true & ((k | !o) & o)) & f ^ (!g | !m | !p => a | b)) & m <=> f) & i & !a => (d & true & !m) & h) & (p) | o) <-> true & (j & !n -> k))
+f & !p -> j & !false
+e | i | b => k
+!(l | !f | b & !l & !j | (g <=> (true ^ !n <=> !(f & e & m | (!(!o)) & !(((c & !n & j) <-> !h) & !false & m & n ^ (g & m ^ l & (e))) & l) & j) | d)) <-> n
+!f <-> d | !n & !false
+false & true
+!d & true
+e & false
+n & f | false ^ p | !(e ^ !d & !l | j) => !m
+f & o & !e => false | (true)
+!j & ((false & d)) & e & i
+n & !j
+p ^ (!f & (!a))
+o & (!d ^ k & !(h & (!(!h | !(!(b) & !d & !o <=> f & p & (!d)) | c) & !(j & k | f | (!k & !d) & i | true)) | e -> n | c))
+h <=> o
+!n | e & a
+p & !(!d & b | (!g ^ (a | n | h & !m | h & c & o | !false) & !j & n & i | !h <=> (((true) <=> !true | (p & l | k & !h & g & o & c -> p)) & !e | a) & !n ^ !true) ^ true) & f & !k
+g & h & !m & m
+!true <=> (c & j ^ p & j ^ j & (n | f | j)) | (n) | d & i & !(!d => d)
+k ^ false -> ((c -> i & f | c & !(!(!c -> j & g ^ (j <-> !p & m)))) | !c ^ !g & false & !e)
+!c ^ c
+!p <=> (m) & e & !(!d & m ^ !i ^ !b)
+!(f | !i & !b & !(!k & a & i ^ false) & b | !f)
+false & p ^ !b & !(e & (l | n | n) <-> !b | a)
+i & (false & !false & i & h & a => !n ^ !n) & o => !k
+d <=> !false & (m <=> (!o ^ !o | k & false | a)) ^ !o & !d
+!(j | e <=> !(false & d & b ^ g) & !true) | !c | k -> false
+true <=> p
+c & !((e) ^ e <-> n ^ (c & m => !d) | h) & f & b <-> d
+!m | o
+true | !j
+!p => a & d & a
+f & p ^ (n | p | f & d | f & true)
+p & ((f ^ i & !b) <=> f)
+l & h | f
+(!k | !m & p | !c) <-> !o
+!c & f
+b & l & ((!n & f) & o) | ((!j & (o | !i) & c & k & !o & false & h & j & !c ^ k & !(g & !false & j) & j)) ^ (d) => !b
+!(j ^ m -> p | g & d) | k & k
+false & p
+!false <=> c ^ !c
+!false & !k <-> (!true | c) & ((g) & l & (l | n | (f & ((f ^ c) | false => h & h | !(!o) & !e & (!n | l | i <=> a ^ !c & !p & l | c | !d & !p) & (false & i) | i & i | k & ((!g | (f | i => false) & ((j & p | l ^ !f | true <-> k) <-> !(e) ^ (j) | !h) | !((a & !p ^ !n => (true <-> !f)) -> c & !j & o ^ o) | b & n & true ^ !true))) & k & d <-> l) | !a & (((true | a | true & l & b) <-> p | c & n | !b)) & (h ^ j ^ (e & b & !(false ^ d & !i | true & n & p => i) & d <-> c | !h & o & !b | l | !m & d | g) => k) & m | (true <-> k & (f)) & e ^ p)) | !o
+(i ^ i) & l & (n & true | (false ^ !n & f & (!((false)) & j -> !e)) ^ !a) & !o <=> o
+true | d & !(false ^ (m & j => e) & (b)) | (!l & m & false)
+i | !c ^ d
+!false -> m & f
+(!k ^ !o ^ true | !l)
+!(!c & true)
+!f | p
+!f & true
+!false & (j | e)
+a ^ !p
+e => !c & d & i & (!a ^ !b | (!false & true & !c & !(a & (j <=> e ^ false) & !o | k ^ p & k | m => !g | !true) ^ a))
+m & !p -> !g
+(true)
+!a & ((m => h) & n) ^ j & m & d | !j
+true | p & false -> false & d
+!o ^ !a <-> e
+(!(d) <=> !b | (n) & !g & !p) | e
+!(m & n)
+!l & a
+b | n <=> j ^ a
+h | !(!b) | e
+h ^ !false <=> !p
+!k & (!e & (!true & n & f & false & (!l) & k & n | (j & (false => b | b & !h & k & m) & !false) & i & !((!j) & !m) & !k -> m) & (!h <-> o) | d) & p <=> (m) & p
+false & false | !m & h & !false ^ !m & o
+m -> d
+!(d & !true)
+!k | o | !k | !(f ^ l) ^ (g) | !f
+(n | ((!f)) & a & false & c)
+(j => l & c)
+d ^ !p
+b | !d <-> true
+!l => false | (!(l) & i) & d & i
+!d <=> g
+!f & a | d & ((f) & (!true))
+j <-> true
+!(!o) & !c ^ true & (n <-> !f & n) & true <-> (!((f & o -> !(!n) ^ e & !n & !d ^ true | c) & a | !h) | true ^ !g | j)
+(m & k -> !i & m) & !o => m & !k
+!f ^ e | n
+f & j & !i | a | j
+(!f & n) => l
+h & !(n & g) | e & n
+!o & !d & m
+!false | e & p
+!(!j => o) & o
+(j & (true | !l | n & !n & m ^ j | f & f <-> j & k & m) & e) & f | !f & (!k)
+i <-> b | g | !((!a))
+!j & (!a ^ n) <-> ((m | !l & !(true | n & !j & !false & !a => !(p | g ^ f & true)) & a <-> j) <=> !i ^ i) & !true & !f & !(a & false => !f) | c ^ false ^ d
+p & !false & !n & g
+a | k ^ n
+n & j | i & !a
+(e ^ false | !(a <=> (false & !true | i) & l)) & m ^ !a | !p
+!((!j => !a))
+!(m) <=> b
+h | !(i <-> (o & g) ^ (!b -> e & g)) <-> n | !i
+f & e | h <=> (e & a & a) | f & !b
+m ^ k & !(e | !false & h & !e & (!(!h & ((!o & h & true | b) & f & (b) & true & true)) ^ d <=> !j)) ^ m | j
+(!e => !true ^ f) & d ^ !b | o & b
+k & !c | !j & false
+(l) & false | a => o & !d ^ j & j
+!(!d) ^ c
+l & n | d
+l | d & a & (a & !false)
+!(!b & (!o)) & j | !e & ((((((o) ^ !true | !m => o) <=> !l & (e) | f ^ !i & l) & m & (!n | true ^ c & h ^ (n | i & (c & !j & !d => c | l & !n) & !m | d | g & (o) | !n & !n | !o & true)) & (b | j & !f | d) & !(!n & (!(!(false & m & !(d -> e) & i & i & (g | !j & !d | !(false & d ^ k & b <-> e | (j & !n | d)))) ^ !(false) & l | i <=> k | (!h ^ (!h | c) & n | !g & p & i & !false & b -> (true | f | !l & e | h & k & f)) & o & h) & !n | true) & e)) & f <-> !m)) ^ false
+e & !n
+!false -> b
+!c | g & true | c <=> i & i & a | !((d)) & n & n & !o
+i & e & !(true ^ !p & m) <=> ((g <=> !(!f & c) & ((!h ^ (o) | j & !c) | g)) & e)
+p & (m & !m) & !j & !n => l
+g & k | (g & p & true & !c | !i ^ l | k <-> !true)
+p & !o ^ o | e
+d ^ !j & o
+false & k <-> o | (true | h & !n & e & d & m)
+b & !false & false & p
+true | l & !i <-> (!(n)) | !m
+l & !i & o & !n
+!true & i
+(!a & !false) <=> !(!(j) ^ l <=> m | !(b)) & (false <=> !n)
+p & c & i & b <-> !(g | l & c | k)
+!j ^ !h | p & !n
+false & false & e & e & !d & i & ((!false | false) ^ m ^ a & j)
+e & !b & true & (o)
+!h & (c)
+!l | !true & !p | h
+b & !o & j | (i)
+k & (n & false) ^ !p & g | h <-> i
+(p & d & ((d ^ e | e & (g -> f & e) | p) & e | n) -> !p | k) & a | e
+false & c
+(n ^ h | g) | b & l
+(a <=> e ^ e | m | h) => e
+true & n & (n & o & (c | a & m <-> n) & true <=> !b)
+false & d & o | c
+!j | f | true & false & d => !f
+n & !m
+m & true & !g
+d & c & !a ^ !l & !d & l & a & e ^ true & true & (!o ^ false & !k | (false | true & true) ^ !k & !(!a) | f & f & g) & c & !o <=> i | !(o)
+(!k) | m <=> c & (true <-> j & j | l) & !h & !l
+f | false
+(f & g) | !true & !o & n
+(!((f | !(a & n <-> d & b | m) | a)) ^ (c ^ i) & p => i & !o & a)
+b | !a & d & !d | (l <-> (!b <-> !a) | ((c & !false & o <-> l & (o) | ((!true & m & true) & false & o))) & e) & false
+true & i & e ^ (o ^ (a) -> c & !o) & !h
+j & c ^ (!o) & o
+(!(!i & k <=> d) | !p) | i & o | !a & (f & !m <-> !j & n & h & !k | (!m | e) | n ^ !g) & e | (h ^ !(e) & (!(j & false) & (g & d)))
+!a & m
+!g & e
+(!h & f ^ ((d | o -> d) <=> d & k ^ !false)) -> !o
+!d ^ true
+b & !j
+!false -> (k | !l) & (c) & o
+!(h & p ^ e | o & !f & a & !(p) & e <-> true & (a | k)) & n | !c & (e)
+(false) & !a | k & h | f
+d & c & !true | b | (false & !a ^ !false | g)
+!f ^ b | !(!g) & !o | n & m & !f => l
+!(f <=> d | !a ^ !false & j ^ (j & f & g | !e | true | !(!j & a & a)) & d | !true & e & j | false | !true & !p | n & l) => !(!c & m & true) | l
+!(true | !false & !true) & !o
+h & !g
+!(!false & k | b & (!p | !d))
+(m) & g & o -> !e
+!b & !(!p & (e) | g | f <=> b & l) & !n
+j & !e => true
+(o | !l & !l | m & (g & !i))
+h | (!b & !(false & (e & false ^ b & !g | true -> !g | false & j & c & !f) & j & a | (k & m) & !l) & e) & (!false <=> c & n) & e & d -> !d & !j
+!n | p
+!false & o
+(((b & !p) | !k ^ true) & k & !j) ^ !j & !(a & ((j & (!k | c & !p) & !o)) & f & (!false & p => false) & d | true) & o
+a <-> !(i | false)
+a <-> c & p ^ !f & (!true & f & h & d & (((true <=> e | a & c | ((false) <=> g ^ o) & i | !n | (h => h ^ k) | !k & !a & !i)) | !p))
+h <-> g
+!c | (true) & !c
+false & !o -> !f
+!false & !p & k & (o) => o | !d & !false & true & j | k
+b | !(false ^ !true & a <=> (false & p & !h -> (i | true & b & e -> e) | f | a) & !p) <-> !(i & l & g & !(!g & p & true & !m | k | !i)) & p & k ^ !e
+m & c & i | k ^ !true | !((!(!d | m => ((!p) & c) ^ k) <=> p & (!p) & l)) & o <=> g
+a & l | a & a | g & f | (!false & a <-> e | p | l & j | false) | (c & (n & d & !(k & !(j | b & !(k <-> m & (m & !(!h & m ^ !(g & false) | h) & n | m & true & (m & !c & h & e) & d) ^ !c) | h & (h | !f)) | false | !o & !i | false | l) => j | !false & b) & j <=> !d & i | i & e) <=> !o & m & (b & !j | true & (!(p & (f <-> !(a & k <=> !b) ^ h & (h & (!d | k) & false | c => !k & d & b & !true & false & f)) => !((!k & b & o & g | (false)) & f & g))) & l & ((i <-> l & (d | !(!i | e & p) & !d | j ^ ((d & !f & !((true & (a) ^ (!d & f | i)) <-> b ^ !true & m) & !n))))) & !j | true & n & c) & c & !f | (true | !p) & e
+(o ^ !b) & (g & !f => b ^ (n & o <-> c))
+!m & f
+k | (!m) -> !f
+true -> !false
+(f ^ !(l & !o ^ false & e) -> (l & b & i & i ^ !(m) | !true & b)) -> e & (true ^ e <-> false | !(!p) | (!false) & !j | !true & (!l ^ (g | true ^ a & j | !true & !((c | !false) & b | !b & false ^ l & l | a) <-> (!((!c & e) & c <=> !f & m) & j) | k | !e) | true ^ !m -> !l | !c & (!m & n | p | !c | false) & !a) | k | !true & !c ^ b & h & l) ^ !k
+f -> d
+(!(!(false) | true & l ^ m) & (h)) ^ true
+!true | h
+n & (l | !h | !true & c & !l) ^ !a | !(!e | (j | o <=> (!false & b)) | n) & l <=> p
+!true & (true) <-> !n & f | g | !m
+!m & true | !false ^ a & !i => (!d)
+!((p) -> o & !b & g) & o | d
+!m | m => !j & h & true & f | b ^ !j & true & (l)
+(d & l <-> !(!e ^ p <-> o & !i) & !true)
+(!c ^ !g -> !true ^ (p | ((!true | !(p | m -> !l & false) ^ l) & (b)) <-> a | ((!a & (!c ^ m <-> c) & (f ^ !b & !k) <=> !h)) ^ false & !(!n & !a) & i | l & n))
+h & ((!l <=> (h & i & true & c) | c & (f | f & !d) | ((j & d ^ !(!(c & !o) <=> !i & !n | g & !f | false | !j) & !a & (!f & m | !j & c) => !true) | n -> l ^ !c) & (!g & false & m) & false) & !m <-> !false ^ (!k) & n) & g
+d & !m ^ (l | j ^ c) -> !i & !(o & i | !f)
+l | j <-> ((c) => d & !d & (m))
+!false
+l & !l
+n & (!n <=> m) <=> !(g => false & !n)
+a <-> o | f
+n | m & !j | (f <=> (!(d) | b & !k) & (!k | ((k | o | b & j) & !b) & !a & !g | !g | p | h))
+f <-> false
+d & f & !e
+(!b & !m)
+!d | f ^ true & a & !o
+(m ^ !g & o & f & !(false => !n) <-> p ^ true) | l
+((((!a => true & f | c & f) & !b & !l) | (j | d) & (o) & !b & !true))
+!(k & h) -> m
+e ^ e => j
+true & h & l & false <=> c & o
+!i & !(false ^ h) & (!(m) ^ b ^ p) & b & d & i <=> (o & j & !l & !h)
+(!b ^ f & false) ^ c & (!(j & a & ((!(l & ((!((!a | (k) & o) & l)) & i)) ^ b -> l | !a) & (k) | j <=> !d) & !o | a -> !(!o & h & !false)) ^ (!m | (h & (p | h)) & m) & (g) ^ !(!k <-> h & k) <-> !g)
+!a & k | g | l & c & j | e -> !true ^ b & h
+l & k => false
+!(f) -> !h | !c | o | true & !p | p & true | n & !(!(h & !k | d ^ !d ^ c) & h) & c
+(g | !(!f) | i & !true)
+((!c & k | (!l | !b & l ^ ((false) & o & k | (m | i) | o)) & b & g) <-> !o)
+j | p & !k | a
+b & c & g | h | e | true ^ c & (!e)
+false => !d
+!((!l & !j) & d) | c & !(k | (!(!l) | !l) & f & !b => k)
+j | h & !g & f | a & false
+m <-> !c & !l
+!l ^ true
+c | h => (e | k & !g & f | !p | h & e & !d | false & h) & h
+!a => !(h & true ^ false => false & p & j & b) & (o => l) & l & !false & (g & !g)
+true & i | true
+g => p
+!n ^ !m <-> !true
+false | g & !f | !j <-> b & k | true
+!h & (!p & h) & (true) & b | false & f & n & !(!k | (f => a & i) | (e | (h & false & false & !j) <=> (false)) <=> !true & n) <=> ((!(!b & o ^ i => (j))) & !f & f)
+!true | !(b & k | !n & d | true => h | k) ^ d ^ k <=> d | b & c
+d & b & b & false
+!i => true
+!d & !l
+(h | (a)) | !(m & !n & o | c <=> !(m) | !b | (!true & c) ^ (!d => (!((!c <=> true) & g) & j | (!false & c & i & p | false) & d) | d)) & (!b -> e) & (!h & e & false -> j) & false -> f
+(m) | false ^ k
+l & !h & m | !e & p -> c
+n | b ^ !true & a ^ l & !m => !k
+!h & (false)
+false & !(l & ((!n & (g) <=> (n & l) ^ a | c & !m & (a & g)) & f & (!c & !h & g)))
+!o ^ !true & !true
+i & true
+b & false | !true & a & e | !(j) & !i <-> j
+!m & l | !g => true | !(c & e & !n <=> (!true -> k) | o) | e
+!(true | (!(!e & !h & c & !m & true & k & (k) | (!(!g ^ !g & j | m & (!m & true ^ o) <-> !m & !false) | d) ^ (o | !e)) ^ ((i <=> false ^ m & !(j | p))) & (false))) | !(g)
+!f & !g ^ k -> (i ^ i) | i & i | c & n ^ a & !f
+i ^ a ^ !(!m)
+!((g <=> o) | false ^ !true <-> j & !(f) & !e)
+!l & (!b)
+j & g & (p)
+l | !i
+(i | (e | c)) & d & !j
+g & !a & (!e => !n) | !true | false
+m | i <=> b
+!(k | g & !i ^ (!i <=> !b & c)) | !false ^ (!false & true & n ^ i & !g & !false & c & f <-> j)
+!l & h
+(!k & k & (n & p) -> !true) => ((d & !(l) & n ^ e & k & ((p & !d)) & (!p)) & !false) & l
+false | (!f) & !false
+!k <=> e & !f
+a & !n | !b
+true | !h & p => l & n ^ g & true | !(p & d) & !(!e)
+!b | ((l ^ !true) & n) ^ false
+l & !c & !c
+(j) & !(i ^ false) & (!e -> !(j) & f) & h
+!(i & !false & h | true & m & e & !d & (b => n & i & c | b & true ^ !m) & !(c <=> !h & true) <=> (!n ^ !true) & n & m & p) | !(l & !p <-> o) & c & m & d & false
+(o) & k | b
+!d -> !a | !(p) ^ o & h
+(i & f & m & !(!c & !false)) | n ^ k
+!j & !o & !k & true | (c & g <=> !k) -> c & (!m) | b ^ !k
+!true | a & c | !a
+(d & b => e) <=> d | k
+!n & !false & !true
+false | b & l & b <-> !m & !c ^ !(!j <-> (a | n) & g | false)
+(c) -> !j & e | b
+(true => !false) & o
+e & n & j
+!l | !false & !c | f
+g & !false <=> m ^ k | j & g & f
+!p & c & a & g
+o & (l & d ^ n ^ !b | !i)
+h ^ !(!(m <-> false) => k) & m | !c
+true & l
+n & !p
+c & !m | k & e
+!(d ^ !l)
+!i & h <=> n
+j & true & a & j & !o => !m & (d & l & (f & !g <=> !o & f | !m & g & !true & true) & !o -> j) | c
+(o & l & d <=> !m | !p | h)
+!(d & j & !h) & e ^ j & m
+!i & m
+!i & !m | false <-> i | d & !(c <=> !o) & !((c) & e & h & (d & false) ^ p & (b) => false | !n) & true | i ^ h
+a | h => a
+d <=> p | c & !f ^ j
+p | (!true) & n | i & (!p & d)
+p & ((!false => !f & (c | h)) | (c | (d & (!(i) | b & n) & j & (true) | !d & (!h & a <-> !n ^ (!f <-> true) & b & !g & j & (f & !true & g & g & p))) & !b) & true | o ^ o)
+h | g ^ !k => e & !a | m | k
+a -> k
+(!(n & !m & false | l & !c ^ a)) & !(o & l | !k & !j -> a) & !h | !o & (k)
+j & !(c ^ l) => false
+d & !m & a
+!j | g
+(f & k <=> !p)
+!(!f => true & j) & true ^ f
+k & m & ((d & !p ^ d) & !o & !b | c | f & ((a & !true <=> e & o & l) | !g))
+true & !k | k
+n <=> e
+k => false & o
+!f & i | (!f ^ (d & a | !a & b) <=> k & b ^ (d & d ^ l))
+true | !l & !j | c
+!n & (!a => !true)
+b & !p
+h | !((!e & !p <-> !c ^ m) | !j & j) | i
+false <-> !c & (false & !d <=> (c => !e | true ^ k & !n) & !g & !o)
+o ^ !n
+!(e & k) & f & b
+true & n <=> !o
+(!true => (false)) | (k) & !l & !e & m
+(!(g & !n) ^ !g | !p & true | (a))
+(!h | f | !f & !k <=> g & (b & e | (!j ^ !h -> f) ^ (!e) & i | d & !j <=> j & n & !j) & c ^ j) & (h)
+!e ^ !(!(m) <-> d) | !true & a & b | h & g & false & !e & e
+!(i ^ i & j | !n | i | (!e))
+g | !n
+!(!b & true => m)
+(i & g) & !(k & ((!true) & h | d & l) & o & !l) & !a & d & l | e & !(j & p -> !(!(!e ^ f & l & !n & d | h -> false) ^ true | (d & ((f | !c | g ^ f & l) => b) & i <-> (!g) & !(!(h -> b) <-> l & p & d & m ^ c) & !g & ((h) & !(!h) <-> false)) & k) & (!k & j & i & c)) ^ c & p & !b & true <-> k & false
+!g & true
+a <-> (c)
+!(n) & !h => false | g ^ (b <-> h & m | !false)
+b & b & l
+c | !a & !(!n) -> !g
+!(f) | m <-> p
+(!n) <=> l ^ i
+!g & d & k
+g ^ h ^ d
+true ^ false & !i & !g & (n <=> !i & !(h <=> !b ^ h | (n | d & k & !d ^ (l & !(b & !l & d ^ j)) -> e & !true & p | c | !f & (e) | f | (e | true | !l & p <-> ((true & j => !m) & true & p & false => (j ^ b <-> m & l & c & j) & i) | c & !a & !d | !g) & (!a | true & true) & (true & (k | (m | e) | false)) & c | !g) & p)) | !c & j
+!true & n | g | true
+m <=> g | (!i & !e)
+(n <-> !(false & true) & l & !h | true) & (!a & !h) & !k
+p ^ m & (a & l ^ !f | n) | !c ^ false <=> false
+true ^ i <=> !j & !n & !b & true
+!false
+!false | f
+!m & (!i) => d
+d & true <=> o
+true => (!h ^ !(d & l & p | ((!c -> k & e | l) | false | p | p & o <-> !(k) & (!(n) & !l & j <-> true) | !n) -> m & !(!a & n)) & o & j | e & a | (j <-> !f)) & false & (l & (!(!true & !((g) <=> !n) | (!((h)) & b ^ g | i) | h & j | i <-> m | i) & !i & !f ^ k & i -> !f) & d)
+!i & (o | a & i) | true -> i & (n) & !(false)
+m | g & i
+j & !h | k | !e
+(h <=> !b ^ b & !d & !h & k & f) | p
+!true ^ !h
+!a | !i & (m) | g & !d ^ k
+(!c & i & d | (o | i ^ b & l | !c | (n | i & !f => !o) & g | !false) & true -> (e <-> true & o & i) & (g) ^ h)
+false | !h | h & o & !m
+!false
+((!i ^ a & l & n) & h) | !e & o | k ^ ((d & p <=> a & a ^ c) | e | !n)
+a ^ b & true ^ f => l ^ !((d) & p)
+(b | !n & !true) & !p
+false | i
+c -> e
+!(((c & i <-> !i & !j) <=> d & f))
+p & !h
+(j) ^ !(l <-> !((false & (l | k -> false & (a) & o) & h & !((f | ((g & l)) & m <-> (o & !false | o) ^ o) & h & g) & e | !f <=> j | (((!i) | true | o & c) -> d & !(((true & j ^ h & !false & d <-> p)) | !false)) | !i & false) | (a <=> !true & !(b) ^ a) | b) & b & n & (e & h & f)) & o & h | h | a
+true & !n
+d & !true => k
+c & (!b ^ !h & i & j) & !o & (true & (i) -> l & (b & !g & c)) & e
+e => d | (!o & g ^ !n)
+!a & o & k
+c & p & i & !n -> m | true ^ false ^ !(o & (!h & !true & e)) | false
+(d & e & !h & a & b | !b | !b ^ e) -> !(!(l & p <-> !(k)))
+!h & !g & b & b & d & !d
+!false & c | f | a | !m | g | !f & m ^ !b
+(!(c) => (!f)) & false | j
+!h & o & l | !((k & h) ^ !(!l) & false <-> !k | l & d & (p & !(l) ^ p & !j | o & ((d & n) & true -> (!true & g | !e) & true | (h & m | true & true & f | (!m | i <-> !((!(!e)) | !true ^ ((g & g) & (g & o) & (!b & !l & (!m & !n & c | (!false & c))) -> k & (l) & !(!a & e & !true & (!false | e <=> !m) | false | j ^ j & ((f)) & true & i) & a & ((n & f & !h <-> e | i) & a))))) & p | (!b & !(!f))) ^ !(d | !h) & (d & (!m | (g)) & !b | b <=> l & m)) & (!n) & true) | d & (!i & i & !m) & true
+!(!a & a) ^ !false | d | i ^ false <-> i ^ !b | !m & e | g & a
+b => f
+false => a
+!(f) -> e & b
+!b ^ !k | f | n | c ^ e ^ m | !false ^ c & o
+((p ^ g)) | h & n & !h | c | o & !n ^ !d | !false
+g <=> !n
+false & true & a & j & !o & !f
+!true & !d
+j ^ !(i | e) -> false | k & (e <-> a | m & a & d) & a ^ h
+!b => true & n
+g & h & e & f & true & !c & e
+!c | !(!true & !(g <-> j ^ j & n ^ false & k | k | false)) ^ !(h) & !a
+!a & false ^ l & a & p <-> true
+i -> j
+(a & c & !j ^ !((g & false) & false ^ !k & !l & (k & p <-> true & !k & k) => !(k & p <=> false) & !false) & (!f & ((!n -> d & (c & (c & h <-> g) & o & o)) | g | false))) & b | n
+l ^ !l ^ !j & !e
+m | (!false & !o & o) ^ !e & !g & p & k | (j)
+k & (f & b) | c & p & !j & !l ^ !(!g) & e | !o ^ !k
+!(f) & false
+(false & h ^ !i & !g <-> !(o => (!m) | !(true) | false & h) | b) & !true & (k) & k => !d
+a & false | !i & m
+(!g => !o & h) <=> (false)
+o | !true & !n
+b | !(o)
+!(!e => true)
+!g => b & e & ((g & l) & !p) | (!false | e ^ l | false) | !l | (m & b | g)
+(!d & c) | false | m
+m & (!b & b)
+(!l | g & true | true) => (b & !(d) | d | d) & m | b
+h & !f | ((o | false) & e | !c | !i) & (!(c & e) ^ o | g & !true | !(d & p & i => m & g & c & !d ^ h | !false & !h & l & !l & o)) ^ f ^ !p ^ b | g | !n | e | false -> !(o & (!p) & ((o) | !g)) | !d & (true & !a <=> !k) & ((!j) & m | !(f | f & l)) & (l & p & !o | l)
+!h => e
+!h ^ l & !d ^ d
+!false & !(g)
+(!g | b)
+b | (j | f | j) & g
+!j | !k & !f & d & p & !g ^ !l | i & (l & k & a <=> k & false | a | !a ^ !f) & !e & i
+(!e & !l | h ^ b | (!(!m <-> j & (!d | i | n) | !a) <-> true & !true ^ !a) & !f | g) | n | !j
+m | !((f ^ false | i)) | m
+b | i => (!e <=> !f & !b) & n
+!i & !(!(o ^ (!o ^ l) | n ^ ((d => (i & a))) <-> false & true & i)) ^ ((j) | c & !l)
+!(g & l) & true
+f <=> false | !false
+(j | l & b & !p & (!j & false | !b -> !k & true | true ^ m & !l | i & a & c ^ false) => !(h) & false & !e & a & !l) <-> b
+!a | ((true & !m) & e)
+m => !b
+f ^ d | !d
+g | j & (!true -> a | b & true) & true
+(false)
+k | !i ^ !true & d | g
+c <=> g & false ^ e & g | p
+!(!a) => p & b
+b | true
+!c => !a & !(false & b)
+j & true
+i & !p
+c & !m & m
+(((true & n)) -> (!((l & !j & !b | k) | !n & !p & (d) -> e | k) ^ l | g) | !e | !k & (!true)) & !(!h -> f | f & d & g & e | !m & o & (f & d) ^ p ^ !b)
+!(l & !n) ^ !k ^ k | !i
+!h & e
+b <-> !o
+c & !(!true) | !(f & ((false | !((!true) & b & !j) | false & b)) | d ^ !e)
+(((c ^ (!true) | p | l) | k <-> !h & i | !(false | !((l) <-> g & false & c) & h -> (k <-> f) & true) | (m & false ^ b)))
+h & !n
+!false ^ l | (e & l ^ false & n & n) & !(j & h & p) ^ !f | !a & j & ((!c <=> (!e & m <-> !j))) ^ g ^ d | o & !((false -> i) | !o) ^ p & ((g) ^ a & !true & (a) & false)
+j ^ j -> !d
+!true <-> !c | k & f & k ^ e
+e & h -> i
+false | n
+f <=> true
+h & n & m <-> f
+!p ^ m & !b
+f & !f & k | !d
+!k & !m <-> !b | (true -> k & !((l & f & ((j) & b) & f) & n <=> p) ^ c) | n
+!false
+!k & !(((!f) ^ !k) => !i & !true & !o)
+f & !a
+b | f | (e) & a -> j
+false | !k ^ !f | a & b
+(!o | !(m | !n & a => !e | g) -> g ^ (!(m))) | !n & c
+(c | p)
+false <=> !p
+j <=> (l | !f) ^ m
+(b | !k & ((c | (true <-> m | !j | !i & ((!d | k) & f & c => d & !k & !true ^ g) & !d | a & false & d | !(!k & !(a <=> i | !p | (!c))) | l) & f))) & k & false -> !true
+p | (c)
+o & e -> !e
+(!l) | o & f & (true) | !o | i & j <-> n & (n <-> p)
+!false
+true <=> (!k <=> (f & (l) & !o => !m & !l) & i)
+j <=> !p
+(!(!(!i | o & !i | !c & k | o) ^ !o | !false | (false & true) & !e & !m) & f & h & (g & j & (!n & !f & m) ^ false) | k => f)
+!f & j & !(b | p & i)
+!false & (k & (true) & (false & !n)) ^ !l & !e
+(h & k & !((!b => h) & !(false & !m & a ^ !(n <=> !g) ^ !j <=> !i | m) & o) <-> !false & !(g & o | j & false & (e ^ n) | n & !((l <-> k) & n & i)) & !j) & n | true <-> !o & p & h
+!a <-> !j & g ^ n & false
+(!(false & !e | !p & (n))) | d
+b | (d) => !j & !e
+j & p & (l & true | true & true & false & !n & g <=> l & g) ^ !k | p | (true)
+c & (!o) -> a
+!b | (n -> a)
+a <-> (a & i) & g
+!(false -> b) & false & !l & (l) & (m & !true | m) & !k & !n
+(i) & !false | b & !j
+!(k & !j) & !n ^ m
+!((a | (!((!(e | c & !b ^ a => !g | (!j) | (false ^ !(!n & !g)) & l | false & o ^ k | n & true & !(l & (c ^ f & !g | k & !p & o)) | !((o & h -> c) <=> d | !k & b & p & !k)) & k | l | j) & f) <-> j | !(n & h) & p) | b -> !h ^ (!(!f & c & !l & m)) & !g) & !g | f)
+(!(c -> m) ^ !i & !false & n & m & a ^ o | p | false)

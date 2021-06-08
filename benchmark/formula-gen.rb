@@ -1,7 +1,7 @@
 class MockFormula
 
 	@@varCount = 4
-	@@vars = "abcdefghijklmnopqrstuvwxyz"
+	@@vars = "abcdefghijklmnop"
 
 	def genFormula()
 		generatePureExpr()
