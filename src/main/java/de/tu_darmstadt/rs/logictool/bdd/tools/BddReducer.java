@@ -16,7 +16,7 @@ public class BddReducer {
      *
      * @param bdd  The BDD to reduce.
      */
-    public void reduceBdd(Bdd bdd) {
+    public void reduceBdd(Bdd bdd, Boolean quasiReduce) {
 
         // order nodes by variable
         ArrayList<BddNode>[] nodes = new ArrayList[bdd.getVariables().length];
@@ -34,7 +34,7 @@ public class BddReducer {
 
             // delete nodes with same child for 0 and 1
             ListIterator<BddNode> it = currentNodes.listIterator();
-            while (it.hasNext()) {
+            while (!quasiReduce && it.hasNext()) {
                 BddNode node = it.next();
                 if (node.getOneChild() == node.getZeroChild()) {
 

@@ -20,17 +20,25 @@ fun main() {
     println("Loaded ${formulas.size} formulas")
     println("Formula length (min/avg/max): $minLength/$avgLength/$maxLength")
 
-    val parsed = formulas.map{ FormulaConverter.parse(it) }
+    val parsed: List<Formula>
+    val parseTime = measureTime {
+        parsed = formulas.map{ FormulaConverter.parse(it) }
+    }
+
+    println("Parsing took ${parseTime.inMilliseconds} ms")
+
     val factory = NaiveBddBuilder()
     val reducer = BddReducer()
 
     val avgVars = parsed.sumBy { it.computeVarWeights(Int.MAX_VALUE).keys.size }.toDouble() / parsed.size
+    val maxVars = parsed.maxByOrNull { it.computeVarWeights(Int.MAX_VALUE).keys.size }!!.computeVarWeights(Int.MAX_VALUE).keys.size
     println("Avg num of vars $avgVars")
+    println("Max num of vars $maxVars")
 
-    naiveReduced(factory, reducer, parsed)
+    //naiveReduced(factory, reducer, parsed)
     synSimReduced(reducer, parsed)
-    naive(factory, parsed)
-    synSim(parsed)
+    //naive(factory, parsed)
+    //synSim(parsed)
 }
 
 @ExperimentalTime
@@ -72,7 +80,7 @@ fun naiveReduced(factory: NaiveBddBuilder, reducer: BddReducer, parsed: List<For
         parsed.forEach { formula ->
             val order = formula.computeVarWeights(Int.MAX_VALUE).toList().sortedByDescending { it.second }.map { it.first }
             val bdd = factory.create(formula, order)
-            reducer.reduceBdd(bdd)
+            reducer.reduceBdd(bdd, false)
             nodes += bdd.nodes.size
         }
     }
@@ -89,7 +97,7 @@ fun synSimReduced(reducer: BddReducer, parsed: List<Formula>) {
         parsed.forEach { formula ->
             val order = formula.computeVarWeights(Int.MAX_VALUE).toList().sortedByDescending { it.second }.map { it.first }
             val bdd = BddBuilder.create(formula, order)
-            reducer.reduceBdd(bdd)
+            reducer.reduceBdd(bdd, false)
             nodes += bdd.nodes.size
         }
     }

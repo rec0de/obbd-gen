@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
         println("Usage: obdd-gen [flags] [formula]")
         println("--naive\tUse naive function evaluation (rather than syntactic simplification)")
         println("--reduce\tProduce a fully reduced bdd")
+        println("--quasireduce\tProduce a quasi-reduced bdd")
         println("--json\tOutput a json representation rather than a dot graph")
         println("--order=[none|weight|a,b,c]\tSpecify variable evaluation order (default: weight)")
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
@@ -37,6 +38,7 @@ fun main(args: Array<String>) {
 
     val naiveEval = flags.contains("--naive")
     val reduce = flags.contains("--reduce")
+    val quasireduce = flags.contains("--quasireduce")
     val jsonOut = flags.contains("--json")
     val filename = when(val outFlag = flags.firstOrNull{ it.startsWith("--out=") }) {
         null -> if(jsonOut) "bdd.json" else "bdd.dot"
@@ -44,14 +46,15 @@ fun main(args: Array<String>) {
     }
 
     // Create bdd from formula
-    val bdd = if(naiveEval)
-            NaiveBddBuilder().create(formula, order)
-        else
-            BddBuilder.create(formula, order)
+    val bdd = when {
+        naiveEval -> NaiveBddBuilder().create(formula, order)
+        quasireduce -> QrbddBuilder.create(formula, order)
+        else -> BddBuilder.create(formula, order)
+    }
 
     // Reduce, if necessary
-    if(reduce)
-        BddReducer().reduceBdd(bdd)
+    if(quasireduce || reduce)
+        BddReducer().reduceBdd(bdd, quasireduce)
 
     // Write result to file
     if(jsonOut)

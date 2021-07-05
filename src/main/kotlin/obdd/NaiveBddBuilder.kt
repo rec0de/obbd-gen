@@ -8,13 +8,13 @@ import obdd.logic.Formula
 /**
  * Quick re-implementation of the basic BDD factory because the given one is buggy
  */
-class NaiveBddBuilder {
+class NaiveBddBuilder : GenericBddBuilder {
 
     private lateinit var formula: Formula
     private lateinit var interpretation: MutableMap<String, Boolean>
     private lateinit var order: Array<Variable>
 
-    fun create(formula: Formula, stringOrder: List<String>) : Bdd {
+    override fun create(formula: Formula, stringOrder: List<String>) : Bdd {
         val order = genOrder(stringOrder)
         this.formula = formula
         this.interpretation = mutableMapOf()

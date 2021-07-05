@@ -7,15 +7,12 @@ import obdd.logic.ConstFalse
 import obdd.logic.ConstTrue
 import obdd.logic.Formula
 
-/**
- * An attempt at a smarter OBDD factory optimized for algebraic inputs
- * As opposed to the provided BddFactory, this BddBuilder should be thread-safe can probably be parallelized
- */
-object BddBuilder {
+interface GenericBddBuilder {
+    fun create(formula: Formula, stringOrder: List<String>) : Bdd
+}
 
-    private const val SYN_EQ = true
-
-    fun create(formula: Formula, stringOrder: List<String>) : Bdd {
+abstract class RecursiveSplitBddBuilder : GenericBddBuilder {
+    override fun create(formula: Formula, stringOrder: List<String>) : Bdd {
         val order = genOrder(stringOrder)
         val simplified = formula.simplify("", false) // Perform generic simplification
 
@@ -30,7 +27,18 @@ object BddBuilder {
         return bdd
     }
 
-    private fun createSplit(bdd: Bdd, formula: Formula, order: Array<Variable>, vi: Int) : BddNode {
+    protected abstract fun createSplit(bdd: Bdd, formula: Formula, order: Array<Variable>, vi: Int) : BddNode
+}
+
+/**
+ * An attempt at a smarter OBDD factory optimized for algebraic inputs
+ * As opposed to the provided BddFactory, this BddBuilder should be thread-safe can probably be parallelized
+ */
+object BddBuilder : RecursiveSplitBddBuilder() {
+
+    private const val SYN_EQ = true
+
+    override fun createSplit(bdd: Bdd, formula: Formula, order: Array<Variable>, vi: Int) : BddNode {
         val variable = order[vi]
         val node = BddNode(variable)
 
