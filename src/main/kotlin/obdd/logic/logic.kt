@@ -4,6 +4,7 @@ import java.lang.Exception
 
 interface Formula {
     fun eval(varMap: Map<String, Boolean>): Boolean
+    fun simplify(): Formula = simplify("", false)
     fun simplify(varName: String, interpretation: Boolean): Formula
     fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
     fun synEq(other: Formula): Boolean
@@ -99,7 +100,8 @@ class And(left : Formula, right: Formula) : BinOp(left, right) {
 
         return when {
             rightSim == ConstFalse -> ConstFalse
-            rightSim == ConstTrue && leftSim == ConstTrue -> ConstTrue
+            leftSim == ConstTrue -> rightSim
+            rightSim == ConstTrue -> leftSim
             else -> And(leftSim, rightSim)
         }
     }

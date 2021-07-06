@@ -14,7 +14,7 @@ interface GenericBddBuilder {
 abstract class RecursiveSplitBddBuilder : GenericBddBuilder {
     override fun create(formula: Formula, stringOrder: List<String>) : Bdd {
         val order = genOrder(stringOrder)
-        val simplified = formula.simplify("", false) // Perform generic simplification
+        val simplified = formula.simplify() // Perform generic simplification
 
         val bdd = Bdd(order)
 
