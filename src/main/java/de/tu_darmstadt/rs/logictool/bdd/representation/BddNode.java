@@ -33,7 +33,7 @@ public class BddNode {
     /**
      * The decision variable of the node.
      */
-    private final Variable variable;
+    private Variable variable;
 
 
     /**
@@ -116,5 +116,16 @@ public class BddNode {
      */
     public Variable getVariable() {
         return variable;
+    }
+
+    /**
+     * @param newVar  The decision variable of the node.
+     */
+    public void setVariable(Variable newVar) {
+        variable = newVar;
+    }
+
+    public boolean isEquivalent(BddNode other) {
+        return this.variable == other.variable && this.oneChild == other.oneChild && this.zeroChild == other.zeroChild;
     }
 }
