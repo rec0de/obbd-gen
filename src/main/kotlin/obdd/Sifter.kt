@@ -2,6 +2,7 @@ package obdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
+import de.tu_darmstadt.rs.logictool.common.representation.Variable
 
 class Sifter(private val bdd: Bdd) {
 
@@ -10,27 +11,93 @@ class Sifter(private val bdd: Bdd) {
     fun sift() = siftFromLevel(0)
 
     fun siftFromLevel(startingLevel: Int) {
-        var i = startingLevel
-        val limit = bdd.variables.size - 1
-
-        println("Size: ${computeSize()}")
-
-        while(i < limit) {
-            swapVariable(i)
-            val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
-            println("EVO: $evo")
-            println("Size: ${computeSize()}")
-            DotSerializer.writeToFile(bdd, "sift-$i.dot")
-            i++
+        val siftOrder = getVariableSiftOrder(startingLevel)
+        siftOrder.forEach {
+            findOptimalVarPosition(startingLevel, it.number)
         }
     }
 
-    private fun getNodesByLevel(): Array<MutableSet<BddNode>> {
-        val res = Array(bdd.variables.size) { mutableSetOf<BddNode>() }
-        bdd.nodes.filter { it != null && it.variable != null }.forEach { node ->
-            res[node.variable.number].add(node)
+    private fun getVariableSiftOrder(startingLevel: Int): List<Variable> {
+        val baseList = bdd.variables.filter { it.number >= startingLevel }
+
+        // Compute the list of variables to be sifted, ordered descending by the number of nodes for that variable
+        return baseList.sortedByDescending { nodesByLevel[it.number].size }
+    }
+
+    private fun findOptimalVarPosition(lowerLimit: Int, variableLevel: Int) {
+        val upperLimit = bdd.variables.size - 1
+
+        // Sift in the direction with fewer levels first, since we will have to do these swaps twice to undo
+        val upwardsFirst = variableLevel - lowerLimit < upperLimit - variableLevel
+        val upwardsRange = (variableLevel-1 downTo lowerLimit)
+        val downwardsRange = (variableLevel until upperLimit)
+
+        val firstRange = if(upwardsFirst) upwardsRange else downwardsRange
+        val secondRange = if(upwardsFirst) downwardsRange else upwardsRange
+        val restorePoint = if(upwardsFirst) lowerLimit else upperLimit
+        val endPoint = if(upwardsFirst) upperLimit else lowerLimit
+
+        var bestSize = computeSize()
+        var bestPosition = variableLevel
+
+        println("Sifting variable at level $variableLevel, base size is $bestSize")
+
+        // Perform first direction sift
+        for(i in firstRange) {
+            swapVariable(i)
+            val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+            val size = computeSize()
+
+            println("EVO: $evo")
+            println("Size: $size")
+
+            if(size < bestSize) {
+                bestSize = size
+                bestPosition = if(upwardsFirst) i else i + 1
+                println("New best!")
+            }
         }
-        return res
+
+        // Undo first sift
+        println("Resetting $restorePoint to $variableLevel")
+        moveVariableTo(restorePoint, variableLevel)
+
+        // Perform second direction sift
+        println("Second sift: $secondRange")
+        for(i in secondRange) {
+            swapVariable(i)
+            val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+            val size = computeSize()
+
+            println("EVO: $evo")
+            println("Size: $size")
+
+            if(size < bestSize) {
+                bestSize = size
+                bestPosition = if(upwardsFirst) i + 1 else i
+                println("New best!")
+            }
+        }
+
+        println("Determined best position $bestPosition for optimal size $bestSize")
+        moveVariableTo(endPoint, bestPosition)
+
+        val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+        val size = computeSize()
+        println("EVO: $evo")
+        println("Size: $size")
+    }
+
+    private fun moveVariableTo(startIndex: Int, targetIndex: Int) {
+        val range = if(startIndex > targetIndex)
+                (startIndex-1 downTo targetIndex)
+            else
+                (startIndex until targetIndex)
+
+        for(i in range) {
+            computeSize()
+            swapVariable(i)
+        }
     }
 
     private fun swapVariable(i: Int) {
@@ -41,7 +108,7 @@ class Sifter(private val bdd: Bdd) {
         val upperVariable = bdd.variables.first { it.number == i }
         val lowerVariable = bdd.variables.first { it.number == i + 1 }
 
-        println("Swapping variable $upperVariable with $lowerVariable")
+        //println("Swapping variable $upperVariable with $lowerVariable")
 
         nodesByLevel[i].toList().forEach { node ->
             swapSingleNode(node)
@@ -106,19 +173,32 @@ class Sifter(private val bdd: Bdd) {
         node.variable = lowerVariable
     }
 
+    private fun getNodesByLevel(): Array<MutableSet<BddNode>> {
+        val res = Array(bdd.variables.size) { mutableSetOf<BddNode>() }
+        bdd.nodes.filter { it != null && it.variable != null }.forEach { node ->
+            res[node.variable.number].add(node)
+        }
+        return res
+    }
+
     // This is probably way too inefficient, TODO
     // Implicitly does garbage collection, should probably be explicit
     private fun computeSize() : Int {
         val queue = mutableSetOf(bdd.rootNode)
         val usedNodes = mutableSetOf(bdd.rootNode)
 
+        // We'll re-create nodesByLevel while we're at it to remove orphans from there
+        nodesByLevel.forEach { it.clear() }
+
         while(queue.isNotEmpty()) {
             val node = queue.first()
             queue.remove(node)
             usedNodes.add(node)
 
-            if(node.oneChild != null)
+            if(node.oneChild != null) {
                 queue.add(node.oneChild)
+                nodesByLevel[node.variable.number].add(node)
+            }
             if(node.zeroChild != null)
                 queue.add(node.zeroChild)
         }
