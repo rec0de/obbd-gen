@@ -1,6 +1,8 @@
 package obdd
 
 import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
+import obdd.serializers.DotSerializer
+import obdd.serializers.JsonSerializer
 
 fun main(args: Array<String>) {
     val flags = args.filter { it.startsWith("--") }
@@ -15,6 +17,11 @@ fun main(args: Array<String>) {
         println("--json\tOutput a json representation rather than a dot graph")
         println("--order=[none|weight|a,b,c]\tSpecify variable evaluation order (default: weight)")
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
+        return
+    }
+
+    if(flags.contains("--blif")) {
+        BlifParser.parse(other.first())
         return
     }
 
@@ -55,6 +62,11 @@ fun main(args: Array<String>) {
     // Reduce, if necessary
     if(quasireduce || reduce)
         BddReducer().reduceBdd(bdd, quasireduce)
+
+    if(flags.contains("--sift")) {
+        val sifter = Sifter(bdd)
+        sifter.sift()
+    }
 
     // Write result to file
     if(jsonOut)

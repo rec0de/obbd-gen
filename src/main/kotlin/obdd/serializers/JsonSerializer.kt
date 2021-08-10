@@ -1,4 +1,4 @@
-package obdd
+package obdd.serializers
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import java.io.BufferedWriter
