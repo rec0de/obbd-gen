@@ -51,7 +51,6 @@ public class Bdd implements Iterable<BddNode> {
         nodes.add(oneNode);
     }
 
-
     /**
      * @return  All nodes of the BDD.
      */

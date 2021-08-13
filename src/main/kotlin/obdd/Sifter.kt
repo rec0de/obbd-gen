@@ -6,7 +6,7 @@ import de.tu_darmstadt.rs.logictool.common.representation.Variable
 
 class Sifter(private val bdd: Bdd) {
 
-    private var nodesByLevel: Array<MutableSet<BddNode>> = getNodesByLevel()
+    private var nodesByLevel: Array<MutableSet<BddNode>> = getNodesByLevel(bdd)
 
     fun sift() = siftFromLevel(0)
 
@@ -171,14 +171,6 @@ class Sifter(private val bdd: Bdd) {
 
         // Update variable of the now swapped upper node
         node.variable = lowerVariable
-    }
-
-    private fun getNodesByLevel(): Array<MutableSet<BddNode>> {
-        val res = Array(bdd.variables.size) { mutableSetOf<BddNode>() }
-        bdd.nodes.filter { it != null && it.variable != null }.forEach { node ->
-            res[node.variable.number].add(node)
-        }
-        return res
     }
 
     // This is probably way too inefficient, TODO

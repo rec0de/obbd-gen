@@ -10,7 +10,7 @@ interface Formula {
     fun synEq(other: Formula): Boolean
 }
 
-class Var(val name: String) : Formula {
+class Var(val name: String) : Formula, LutAtom {
     override fun eval(varMap: Map<String, Boolean>): Boolean {
         return if(varMap.containsKey(name))
             varMap[name]!!
