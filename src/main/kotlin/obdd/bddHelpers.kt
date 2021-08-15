@@ -14,9 +14,31 @@ fun getNodesByLevel(bdd: Bdd): Array<MutableSet<BddNode>> {
     return res
 }
 
-fun getPathConditions(bdd: Bdd, untilLevel: Int) : Map<BddNode, Formula> {
+fun extractSubtree(startNode: BddNode, untilLevel: Int) : Set<BddNode> {
+    val subtree = mutableSetOf<BddNode>()
+    val worklist = mutableListOf<BddNode>(startNode)
+
+    while(worklist.isNotEmpty()) {
+        val node = worklist.removeFirst()
+
+        if(node.variable?.number ?: Int.MAX_VALUE >= untilLevel)
+            continue
+
+        subtree.add(node)
+        if(node.zeroChild != null)
+            worklist.add(node.zeroChild)
+        if(node.oneChild != null)
+            worklist.add(node.oneChild)
+    }
+
+    return subtree
+}
+
+fun getPathConditionsFromNode(startNode: BddNode, untilLevel: Int) = getPathConditions(extractSubtree(startNode, untilLevel), untilLevel)
+
+fun getPathConditions(nodes: Iterable<BddNode>, untilLevel: Int) : Map<BddNode, Formula> {
     val pathCondMap = mutableMapOf<BddNode, Formula>()
-    val sortedNodes = bdd.nodes.filter{ it.variable?.number ?: Int.MAX_VALUE < untilLevel }.sortedBy { it.variable.number }
+    val sortedNodes = nodes.filter{ it.variable?.number ?: Int.MAX_VALUE < untilLevel }.sortedBy { it.variable.number }
 
     sortedNodes.forEach { node ->
         val baseFormula = pathCondMap.getOrDefault(node, ConstTrue)

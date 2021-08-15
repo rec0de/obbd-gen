@@ -40,52 +40,52 @@ class Sifter(private val bdd: Bdd) {
         var bestSize = computeSize()
         var bestPosition = variableLevel
 
-        println("Sifting variable at level $variableLevel, base size is $bestSize")
+        //println("Sifting variable at level $variableLevel, base size is $bestSize")
 
         // Perform first direction sift
         for(i in firstRange) {
             swapVariable(i)
-            val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+            //val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
             val size = computeSize()
 
-            println("EVO: $evo")
-            println("Size: $size")
+            //println("EVO: $evo")
+            //println("Size: $size")
 
             if(size < bestSize) {
                 bestSize = size
                 bestPosition = if(upwardsFirst) i else i + 1
-                println("New best!")
+                //println("New best!")
             }
         }
 
         // Undo first sift
-        println("Resetting $restorePoint to $variableLevel")
+        //println("Resetting $restorePoint to $variableLevel")
         moveVariableTo(restorePoint, variableLevel)
 
         // Perform second direction sift
-        println("Second sift: $secondRange")
+        //println("Second sift: $secondRange")
         for(i in secondRange) {
             swapVariable(i)
-            val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+            //val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
             val size = computeSize()
 
-            println("EVO: $evo")
-            println("Size: $size")
+            //println("EVO: $evo")
+            //println("Size: $size")
 
             if(size < bestSize) {
                 bestSize = size
                 bestPosition = if(upwardsFirst) i + 1 else i
-                println("New best!")
+                //println("New best!")
             }
         }
 
-        println("Determined best position $bestPosition for optimal size $bestSize")
+        //println("Determined best position $bestPosition for optimal size $bestSize")
         moveVariableTo(endPoint, bestPosition)
 
-        val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
-        val size = computeSize()
-        println("EVO: $evo")
-        println("Size: $size")
+        //val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
+        val size = computeSize() // keep for now as implicit garbage collect
+        //println("EVO: $evo")
+        //println("Size: $size")
     }
 
     private fun moveVariableTo(startIndex: Int, targetIndex: Int) {
