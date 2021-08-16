@@ -21,13 +21,18 @@ fun main(args: Array<String>) {
     }
 
     if(flags.contains("--blif")) {
-        BlifParser.parse(other.first())
+        println(BaseMapper.mapBLIF(other.first()).joinToString("\n\n"))
         return
     }
 
     // Parse formula
     val formula = FormulaConverter.parse(other.first())
     println("Parsed input formula: $formula")
+
+    if(flags.contains("--map")) {
+        println(BaseMapper.mapFormula(formula, "output").joinToString("\n"))
+        return
+    }
 
     // Compute order according to flag / verify given order contains all required vars
     val varWeights = formula.computeVarWeights(Int.MAX_VALUE)

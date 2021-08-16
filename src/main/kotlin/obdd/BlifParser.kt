@@ -15,7 +15,7 @@ object BlifParser {
 
     private var inputVars: Set<String> = emptySet()
 
-    fun parse(filename: String) : List<Formula> {
+    fun parse(filename: String) : List<Pair<String,Formula>> {
         gates.clear()
         wireFormulas.clear()
         inputVars = emptySet()
@@ -52,7 +52,7 @@ object BlifParser {
         /*println("Inputs: ${inputVars.joinToString(", ")}")
         println("Outputs: ${outputVars.joinToString(", ")}")*/
 
-        return outputVars.map { gateToFormula(it) }
+        return outputVars.map { Pair(it, gateToFormula(it)) }
     }
 
     private fun gateToFormula(wireName: String) : Formula {
