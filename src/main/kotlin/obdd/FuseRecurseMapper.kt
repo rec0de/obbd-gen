@@ -18,7 +18,7 @@ object FuseRecurseMapper : LutMapStrategy() {
     override fun mapQRBDD(bdd: Bdd, outputName: String): List<Lut> {
         // Pre-sift to find good cuts
         Sifter(bdd).sift()
-        debugDumpBdd(bdd)
+        //debugDumpBdd(bdd)
 
         // Very useful to have access to all nodes of a level
         val nodesByLevel = getNodesByLevel(bdd)
@@ -127,7 +127,7 @@ object FuseRecurseMapper : LutMapStrategy() {
 
         val heightBelowCut = max((bdd.variables.size - cutLevel) - (lutCap - selectSignalWidth), 0)
 
-        val estimatedUpperCost = selectSignalWidth * ceil(heightAboveCut.toDouble() / lutCap).toInt()
+        val estimatedUpperCost = selectSignalWidth * ceil(heightAboveCut.toDouble() / (lutCap - 1)).toInt()
 
         val estimatedLowerCost = if(heightBelowCut == 0)
             0
@@ -135,7 +135,7 @@ object FuseRecurseMapper : LutMapStrategy() {
             val outMultiplicity = max(ceil(log2(nodesByLevel[bdd.variables.size - heightBelowCut].size.toDouble())).toInt(), 1)
             if(outMultiplicity >= lutCap)
                 return Int.MAX_VALUE
-            ceil((heightBelowCut.toDouble() / (lutCap - outMultiplicity))).toInt() * outMultiplicity
+            ceil(((heightBelowCut.toDouble() + outMultiplicity) / (lutCap - 1))).toInt()
         }
 
         return estimatedUpperCost + estimatedLowerCost

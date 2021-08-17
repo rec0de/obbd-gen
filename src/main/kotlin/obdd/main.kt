@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     }
 
     if(flags.contains("--blif")) {
-        println(BaseMapper.mapBLIF(other.first()).joinToString("\n\n"))
+        println(FuseRecurseMapper.mapBLIF(other.first()).joinToString("\n\n"))
         return
     }
 
@@ -30,7 +30,7 @@ fun main(args: Array<String>) {
     println("Parsed input formula: $formula")
 
     if(flags.contains("--map")) {
-        println(BaseMapper.mapFormula(formula, "output").joinToString("\n"))
+        println(FuseRecurseMapper.mapFormula(formula, "output").joinToString("\n"))
         return
     }
 

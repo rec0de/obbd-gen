@@ -30,7 +30,7 @@ public class BddNode {
     public BddNode(Variable variable) {
         this.variable = variable;
     }
-    
+
     /**
      * @return  The zero child of the node.
      */
