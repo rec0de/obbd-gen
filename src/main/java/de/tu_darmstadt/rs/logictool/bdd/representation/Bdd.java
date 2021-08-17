@@ -3,6 +3,7 @@ package de.tu_darmstadt.rs.logictool.bdd.representation;
 import de.tu_darmstadt.rs.logictool.common.representation.Variable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,6 +50,14 @@ public class Bdd implements Iterable<BddNode> {
         this.oneNode = new BddNode(null);
         nodes.add(zeroNode);
         nodes.add(oneNode);
+    }
+
+    public Bdd(Variable[] variables, BddNode oneNode, BddNode zeroNode, Collection<BddNode> nodes) {
+        this.variables = variables;
+        this.nodes = new ArrayList<>();
+        this.zeroNode = oneNode;
+        this.oneNode = zeroNode;
+        this.nodes.addAll(nodes);
     }
 
     public void clear() {
