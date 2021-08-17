@@ -4,6 +4,7 @@ import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd;
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode;
 import de.tu_darmstadt.rs.logictool.common.representation.Variable;
 
+import java.sql.Array;
 import java.util.*;
 
 /**
@@ -17,6 +18,16 @@ public class BddReducer {
      * @param bdd  The BDD to reduce.
      */
     public void reduceBdd(Bdd bdd, Boolean quasiReduce) {
+
+        Map<BddNode,List<BddNode>> parentMap = new HashMap<BddNode,List<BddNode>>();
+        for(BddNode node : bdd) {
+            if(node.getZeroChild() == null)
+                continue;
+            parentMap.putIfAbsent(node.getZeroChild(), new ArrayList<BddNode>());
+            parentMap.putIfAbsent(node.getOneChild(), new ArrayList<BddNode>());
+            parentMap.get(node.getZeroChild()).add(node);
+            parentMap.get(node.getOneChild()).add(node);
+        }
 
         // order nodes by variable
         ArrayList<BddNode>[] nodes = new ArrayList[bdd.getVariables().length];
@@ -43,11 +54,13 @@ public class BddReducer {
                         bdd.setRootNode(node.getZeroChild());
                     } else {
                         // update links to parents
-                        for (BddNode parent : new ArrayList<>(node.getParents())) {
+                        for (BddNode parent : parentMap.getOrDefault(node, Collections.emptyList())) {
+                            parentMap.get(node.getZeroChild()).remove(node);
+                            parentMap.get(node.getZeroChild()).add(parent);
                             if (parent.getZeroChild() == node)
                                 parent.setZeroChild(node.getZeroChild());
                             else
-                                parent.setOneChild(node.getOneChild());
+                                parent.setOneChild(node.getZeroChild());
                         }
                     }
 
@@ -80,7 +93,8 @@ public class BddReducer {
                         continue;
 
                     // nodes are equivalent -> link all parents to outer node
-                    for (BddNode parent : new ArrayList<>(innerNode.getParents())) {
+                    parentMap.get(outerNode).addAll(parentMap.get(innerNode));
+                    for (BddNode parent : parentMap.get(innerNode)) {
                         if (parent.getZeroChild() == innerNode)
                             parent.setZeroChild(outerNode);
                         if (parent.getOneChild() == innerNode)
