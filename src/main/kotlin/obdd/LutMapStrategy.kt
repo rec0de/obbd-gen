@@ -43,7 +43,7 @@ abstract class LutMapStrategy {
     }
 
     protected fun log(msg: String) {
-        println("[$strategyName] $msg")
+        System.err.println("[$strategyName] $msg")
     }
 
     protected fun debugDumpBdd(bdd: Bdd) {
