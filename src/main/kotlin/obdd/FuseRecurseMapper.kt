@@ -26,7 +26,7 @@ object FuseRecurseMapper : LutMapStrategy() {
         // Enumerate all possible cut positions and find the one that minimizes estimated cost
         val bestCut = (0 until bdd.variables.size).minByOrNull { scoreCut(bdd, nodesByLevel, it) }!!
         val nodesUnderCut = nodesByLevel[bestCut]
-        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}")
+        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}, ${nodesUnderCut.size} nodes under cut")
 
         // Compute the formulas which "activate" / lead to each node under the cut
         val pathConditions = getPathConditions(bdd, bestCut)
@@ -83,7 +83,7 @@ object FuseRecurseMapper : LutMapStrategy() {
     }
 
     private fun genSelectBdd(selectSignals: List<String>, targetLevel: Int, targetNodes: List<BddNode>, oldBdd: Bdd): Bdd {
-        val selectVariables = selectSignals.mapIndexed { index, s -> Variable(s, index) }
+        val selectVariables = selectSignals.reversed().mapIndexed { index, s -> Variable(s, index) }
         val remainingVariables = oldBdd.variables.filter { it.number >= targetLevel }.sortedBy { it.number }
         remainingVariables.forEachIndexed { index, variable -> variable.number = index + selectVariables.size } // Re-number existing variables
         val variables = selectVariables + remainingVariables
@@ -99,8 +99,8 @@ object FuseRecurseMapper : LutMapStrategy() {
         if(selectVariables.isEmpty() && targetNodes.size == 1)
             return targetNodes.first()
 
-        val node = BddNode(selectVariables.last())
-        val rest = selectVariables.dropLast(1)
+        val node = BddNode(selectVariables.first())
+        val rest = selectVariables.drop(1)
         val subtreeCap = 1 shl rest.size
 
         if(targetNodes.size <= subtreeCap) {

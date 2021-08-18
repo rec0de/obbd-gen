@@ -57,6 +57,8 @@ public class Bdd implements Iterable<BddNode> {
         this.nodes = new ArrayList<>();
         this.zeroNode = oneNode;
         this.oneNode = zeroNode;
+        this.nodes.add(oneNode);
+        this.nodes.add(zeroNode);
         this.nodes.addAll(nodes);
     }
 
