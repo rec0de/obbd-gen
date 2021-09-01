@@ -3,6 +3,7 @@ package obdd
 import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
 import obdd.serializers.DotSerializer
 import obdd.serializers.JsonSerializer
+import java.io.File
 
 fun main(args: Array<String>) {
     val flags = args.filter { it.startsWith("--") }
@@ -17,22 +18,24 @@ fun main(args: Array<String>) {
         println("--json\tOutput a json representation rather than a dot graph")
         println("--order=[none|weight|a,b,c]\tSpecify variable evaluation order (default: weight)")
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
+        println("\nobdd-gen --blif-map [flags] [blif file]")
+        println("--out=[path]\tWrite output to this location (default: mapped.blif)")
         return
     }
 
-    if(flags.contains("--blif")) {
-        println(FuseRecurseMapper.mapBLIF(other.first()).joinToString("\n\n"))
+    if(flags.contains("--blif-map")) {
+        val res = FuseRecurseMapper.mapBLIF(other.first())
+        val filename = when(val outFlag = flags.firstOrNull{ it.startsWith("--out=") }) {
+            null -> "mapped.blif"
+            else -> outFlag.removePrefix("--out=")
+        }
+        File(filename).writeText(res)
         return
     }
 
     // Parse formula
     val formula = FormulaConverter.parse(other.first())
     println("Parsed input formula: $formula")
-
-    if(flags.contains("--map")) {
-        println(FuseRecurseMapper.mapFormula(formula, "output").joinToString("\n"))
-        return
-    }
 
     // Compute order according to flag / verify given order contains all required vars
     val varWeights = formula.computeVarWeights(Int.MAX_VALUE)

@@ -12,10 +12,10 @@ object BlifParser {
     // Cache of already evaluated formulas
     private val wireFormulas: MutableMap<String, Formula> = mutableMapOf()
 
-
     private var inputVars: Set<String> = emptySet()
 
-    fun parse(filename: String) : List<Pair<String,Formula>> {
+    // The return type is a bit messy, but it's basically: (input vars, {output vars -> output formula})
+    fun parse(filename: String) : Pair<Collection<String>, List<Pair<String,Formula>>> {
         gates.clear()
         wireFormulas.clear()
         inputVars = emptySet()
@@ -52,7 +52,7 @@ object BlifParser {
         /*println("Inputs: ${inputVars.joinToString(", ")}")
         println("Outputs: ${outputVars.joinToString(", ")}")*/
 
-        return outputVars.map { Pair(it, gateToFormula(it)) }
+        return Pair(inputVars, outputVars.map { Pair(it, gateToFormula(it)) })
     }
 
     private fun gateToFormula(wireName: String) : Formula {
@@ -95,12 +95,12 @@ object BlifParser {
 
     private fun normalizeLines(lines: List<String>) : List<String> {
         // Remove comments and excess whitespace
-        val nocomments = lines.map{ it.replaceAfter('#', "").trim() }.filter { it.isNotBlank() }
+        val noComments = lines.map{ it.replaceAfter('#', "").trim() }.filter { it.isNotBlank() }
 
         // Resolve line concatenations
         var buffer = ""
         val res = mutableListOf<String>()
-        nocomments.forEach {
+        noComments.forEach {
             if(it.endsWith('\\'))
                 buffer += it.removeSuffix("\\")
             else {

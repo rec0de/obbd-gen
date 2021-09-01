@@ -25,8 +25,6 @@ class Lut(private val inputWires: Array<String>, private val outputWire: String,
         val queue: MutableList<Triple<Formula,Int,UInt>> = mutableListOf(Triple(emulateFormula, 0, UInt.MAX_VALUE))
         val onSet: MutableList<UInt> = mutableListOf()
 
-        // TODO: might as well use smart variable ordering
-
         while (queue.isNotEmpty()) {
             val item = queue.removeFirst()
             val formula = item.first

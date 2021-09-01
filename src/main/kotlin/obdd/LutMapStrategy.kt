@@ -3,6 +3,7 @@ package obdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import obdd.logic.*
 import obdd.serializers.DotSerializer
+import kotlin.system.measureTimeMillis
 
 abstract class LutMapStrategy {
 
@@ -10,9 +11,21 @@ abstract class LutMapStrategy {
     private var outFileCounter = 0
     private var signalIdCounter = 0
 
-    fun mapBLIF(filename: String) : List<List<Lut>> {
-        val formulas = BlifParser.parse(filename)
-        return formulas.map{ mapFormula(it.second, it.first) }
+    fun mapBLIF(filename: String) : String {
+        val parsed = BlifParser.parse(filename)
+        val formulas = parsed.second
+        val inputs = parsed.first.joinToString(" ")
+        val outputs = formulas.joinToString(" ") { it.first }
+        val header = ".model Mapped\n.inputs $inputs\n.outputs $outputs\n"
+
+        log("Start mapping...")
+        val mapped: List<Lut>
+        val elapsed = measureTimeMillis {
+            mapped = formulas.flatMap{ mapFormula(it.second, it.first) }
+        }
+        log("Mapping complete! Took $elapsed ms, created ${mapped.size} LUTs total")
+
+        return header + mapped.joinToString("\n") { it.toBLIF(listOf(3, 5)) } + "\n.end"
     }
 
     fun mapFormula(formula: Formula, outputName: String) : List<Lut> {
