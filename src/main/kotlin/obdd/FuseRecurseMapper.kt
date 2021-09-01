@@ -8,6 +8,7 @@ import kotlin.math.ceil
 import kotlin.math.log2
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.system.measureTimeMillis
 
 object FuseRecurseMapper : LutMapStrategy() {
 
@@ -17,7 +18,10 @@ object FuseRecurseMapper : LutMapStrategy() {
     // This is pretty dense, I'll try explaining as best I can
     override fun mapQRBDD(bdd: Bdd, outputName: String): List<Lut> {
         // Pre-sift to find good cuts
-        Sifter(bdd).sift()
+        val siftTime = measureTimeMillis {
+            Sifter(bdd).siftFirstN(16)
+        }
+        log("Sifting took $siftTime ms")
         //debugDumpBdd(bdd)
 
         // Very useful to have access to all nodes of a level

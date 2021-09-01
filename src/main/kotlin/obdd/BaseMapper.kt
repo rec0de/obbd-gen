@@ -16,7 +16,7 @@ object BaseMapper : LutMapStrategy() {
     override fun mapQRBDD(bdd: Bdd, outputName: String): List<Lut> {
         // Pre-sift to find good cuts
         Sifter(bdd).sift()
-        debugDumpBdd(bdd)
+        //debugDumpBdd(bdd)
 
         // Very useful to have access to all nodes of a level
         val nodesByLevel = getNodesByLevel(bdd)

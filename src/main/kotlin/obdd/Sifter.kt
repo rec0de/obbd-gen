@@ -3,30 +3,31 @@ package obdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
 import de.tu_darmstadt.rs.logictool.common.representation.Variable
+import kotlin.math.min
 
 class Sifter(private val bdd: Bdd) {
 
     private var nodesByLevel: Array<MutableSet<BddNode>> = getNodesByLevel(bdd)
 
-    fun sift() = siftFromLevel(0)
+    fun sift() = siftFromLevel(0, bdd.variables.size)
+    fun siftFirstN(n: Int) = siftFromLevel(0, n)
 
-    fun siftFromLevel(startingLevel: Int) {
-        val siftOrder = getVariableSiftOrder(startingLevel)
+    fun siftFromLevel(startingLevel: Int, limit: Int) {
+        val siftOrder = getVariableSiftOrder(startingLevel, limit)
+        val upperLimit = min(bdd.variables.size - 1, startingLevel + limit)
         siftOrder.forEach {
-            findOptimalVarPosition(startingLevel, it.number)
+            findOptimalVarPosition(startingLevel, upperLimit, it.number)
         }
     }
 
-    private fun getVariableSiftOrder(startingLevel: Int): List<Variable> {
-        val baseList = bdd.variables.filter { it.number >= startingLevel }
+    private fun getVariableSiftOrder(startingLevel: Int, limit: Int): List<Variable> {
+        val baseList = bdd.variables.filter { it.number >= startingLevel && it.number <= startingLevel + limit }
 
         // Compute the list of variables to be sifted, ordered descending by the number of nodes for that variable
         return baseList.sortedByDescending { nodesByLevel[it.number].size }
     }
 
-    private fun findOptimalVarPosition(lowerLimit: Int, variableLevel: Int) {
-        val upperLimit = bdd.variables.size - 1
-
+    private fun findOptimalVarPosition(lowerLimit: Int, upperLimit: Int, variableLevel: Int) {
         // Sift in the direction with fewer levels first, since we will have to do these swaps twice to undo
         val upwardsFirst = variableLevel - lowerLimit < upperLimit - variableLevel
         val upwardsRange = (variableLevel-1 downTo lowerLimit)

@@ -45,7 +45,7 @@ abstract class LutMapStrategy {
             ConstTrue
         else
             selectSignalIDs.mapIndexed { i, sid ->
-                if(entryNodeIndex % (2 shl i) == 0) Not(Var(sid)) else Var(sid)
+                if(entryNodeIndex % (2 shl i) < (1 shl i)) Not(Var(sid)) else Var(sid)
             }.reduce { acc, atom -> And(acc, atom) }
     }
 
