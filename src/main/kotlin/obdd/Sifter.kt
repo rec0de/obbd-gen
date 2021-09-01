@@ -14,7 +14,7 @@ class Sifter(private val bdd: Bdd) {
 
     fun siftFromLevel(startingLevel: Int, limit: Int) {
         val siftOrder = getVariableSiftOrder(startingLevel, limit)
-        val upperLimit = min(bdd.variables.size - 1, startingLevel + limit)
+        val upperLimit = bdd.variables.size - 1
         siftOrder.forEach {
             findOptimalVarPosition(startingLevel, upperLimit, it.number)
         }

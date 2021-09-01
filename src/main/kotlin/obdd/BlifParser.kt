@@ -70,8 +70,8 @@ object BlifParser {
         val inputs = gateInfo.first
         val table = gateInfo.second
 
-        val formula = if(inputs.isEmpty() && table.first() == "1")
-                ConstTrue
+        val formula = if(inputs.isEmpty())
+                if(table.isEmpty() || table.first() != "1") ConstFalse else ConstTrue
             else
                 table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) }.simplify() // OR over all lines in the table
 

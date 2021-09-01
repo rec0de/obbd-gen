@@ -6,14 +6,14 @@ class Lut(private val inputWires: Array<String>, private val outputWire: String,
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun toBLIF(lutSizes: List<Int>): String {
+    fun toBLIF(lutSizes: List<Int>, placeholder: String): String {
         val paddedSize = lutSizes.filter { it >= inputWires.size }.minOrNull()
             ?: throw Exception("No suitable LUT type available for ${inputWires.size} inputs")
 
         if(inputWires.size > 16)
             throw Exception("LUT is too large to be converted to cubes (max 16 inputs, got ${inputWires.size})")
 
-        val paddedInputs = inputWires.joinToString(" ") + " ${inputWires.first()}".repeat(paddedSize - inputWires.size)
+        val paddedInputs = inputWires.joinToString(" ") + " $placeholder".repeat(paddedSize - inputWires.size)
         val header = ".names $paddedInputs $outputWire\n"
         val onLines = formulaToCubeSet().map { cubeToBlifLine(it, paddedSize) }
 

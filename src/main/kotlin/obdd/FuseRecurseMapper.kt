@@ -15,14 +15,18 @@ object FuseRecurseMapper : LutMapStrategy() {
     override val strategyName = "fusemap"
     private const val lutCap = 5
 
+    override fun mapQRBDD(bdd: Bdd, outputName: String) = mapQRBDDInternal(bdd, outputName, false)
+
     // This is pretty dense, I'll try explaining as best I can
-    override fun mapQRBDD(bdd: Bdd, outputName: String): List<Lut> {
+    private fun mapQRBDDInternal(bdd: Bdd, outputName: String, quickSift: Boolean): List<Lut> {
         // Pre-sift to find good cuts
-        val siftTime = measureTimeMillis {
-            Sifter(bdd).siftFirstN(16)
-        }
-        log("Sifting took $siftTime ms")
+        val sifter = Sifter(bdd)
+        if(quickSift) sifter.siftFirstN(5) else sifter.sift()
         //debugDumpBdd(bdd)
+
+        // Edge case: constant bdd
+        if(bdd.variables.isEmpty())
+            return listOf(Lut(emptyArray(), outputName, if(bdd.rootNode == bdd.oneNode) ConstTrue else ConstFalse))
 
         // Very useful to have access to all nodes of a level
         val nodesByLevel = getNodesByLevel(bdd)
@@ -40,7 +44,7 @@ object FuseRecurseMapper : LutMapStrategy() {
         // such that a select signal of 011 indicates the third node under the cut (instead of e.g. 0010000)
         val packedSelectSignals = densePackExclusiveFormulas(relevantPathConditions)
         val selectSignalIDs = genSignalIDs(packedSelectSignals.size)
-        log("Packed select signal is ${packedSelectSignals.size} bit wide")
+        //log("Packed select signal is ${packedSelectSignals.size} bit wide")
 
         // Using the generated select signals as input to our LUT, some free inputs remain which we will 'pack' with
         // variables from the following levels of the BDD
@@ -77,7 +81,7 @@ object FuseRecurseMapper : LutMapStrategy() {
             bdd.clear()
 
             // These are the LUTs representing everything below the exit layer (as well as the previously computed LUTs for between entry and exit)
-            mapQRBDD(fusedBdd, outputName) + luts
+            mapQRBDDInternal(fusedBdd, outputName, true) + luts
         }
 
         // These are the LUTs representing the select signals / everything above the entry layer
@@ -138,8 +142,8 @@ object FuseRecurseMapper : LutMapStrategy() {
         else {
             val outMultiplicity = max(ceil(log2(nodesByLevel[bdd.variables.size - heightBelowCut].size.toDouble())).toInt(), 1)
             if(outMultiplicity >= lutCap)
-                return Int.MAX_VALUE
-            ceil(((heightBelowCut.toDouble() + outMultiplicity) / (lutCap - 1))).toInt()
+                return Int.MAX_VALUE - 1
+            ceil(((heightBelowCut.toDouble() + outMultiplicity) / (lutCap - outMultiplicity.toDouble()*0.75))).toInt()
         }
 
         return estimatedUpperCost + estimatedLowerCost

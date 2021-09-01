@@ -18,6 +18,10 @@ object BaseMapper : LutMapStrategy() {
         Sifter(bdd).sift()
         //debugDumpBdd(bdd)
 
+        // Edge case: constant bdd
+        if(bdd.variables.isEmpty())
+            return listOf(Lut(emptyArray(), outputName, if(bdd.rootNode == bdd.oneNode) ConstTrue else ConstFalse))
+
         // Very useful to have access to all nodes of a level
         val nodesByLevel = getNodesByLevel(bdd)
 

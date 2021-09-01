@@ -15,6 +15,7 @@ abstract class LutMapStrategy {
         val parsed = BlifParser.parse(filename)
         val formulas = parsed.second
         val inputs = parsed.first.joinToString(" ")
+        val placeholder = parsed.first.first()
         val outputs = formulas.joinToString(" ") { it.first }
         val header = ".model Mapped\n.inputs $inputs\n.outputs $outputs\n"
 
@@ -25,7 +26,7 @@ abstract class LutMapStrategy {
         }
         log("Mapping complete! Took $elapsed ms, created ${mapped.size} LUTs total")
 
-        return header + mapped.joinToString("\n") { it.toBLIF(listOf(3, 5)) } + "\n.end"
+        return header + mapped.joinToString("\n") { it.toBLIF(listOf(3, 5), placeholder) } + "\n.end"
     }
 
     fun mapFormula(formula: Formula, outputName: String) : List<Lut> {
