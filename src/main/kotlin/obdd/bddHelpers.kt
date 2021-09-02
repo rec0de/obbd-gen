@@ -45,12 +45,13 @@ fun getPathConditions(nodes: Iterable<BddNode>, untilLevel: Int) : Map<BddNode, 
         val baseFormula = pathCondMap.getOrDefault(node, ConstTrue)
 
         if(node.zeroChild == node.oneChild) {
-            pathCondMap[node.zeroChild] = Or(pathCondMap.getOrDefault(node.zeroChild, ConstFalse), baseFormula)
-            pathCondMap[node.oneChild] = Or(pathCondMap.getOrDefault(node.oneChild, ConstFalse), baseFormula)
+            pathCondMap[node.zeroChild] = if(pathCondMap.containsKey(node.zeroChild)) Or(pathCondMap[node.zeroChild]!!, baseFormula) else baseFormula
         }
         else {
-            pathCondMap[node.zeroChild] = Or(pathCondMap.getOrDefault(node.zeroChild, ConstFalse), And(baseFormula, Not(Var(node.variable.name))))
-            pathCondMap[node.oneChild] = Or(pathCondMap.getOrDefault(node.oneChild, ConstFalse), And(baseFormula, Var(node.variable.name)))
+            val zeroFormula = And(baseFormula, Not(Var(node.variable.name)))
+            pathCondMap[node.zeroChild] = if(pathCondMap.containsKey(node.zeroChild)) Or(pathCondMap[node.zeroChild]!!, zeroFormula) else zeroFormula
+            val oneFormula = And(baseFormula, Var(node.variable.name))
+            pathCondMap[node.oneChild] = if(pathCondMap.containsKey(node.oneChild)) Or(pathCondMap[node.oneChild]!!, oneFormula) else oneFormula
         }
     }
 

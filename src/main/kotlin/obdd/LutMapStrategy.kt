@@ -19,20 +19,24 @@ abstract class LutMapStrategy {
         val outputs = formulas.joinToString(" ") { it.first }
         val header = ".model Mapped\n.inputs $inputs\n.outputs $outputs\n"
 
-        log("Start mapping...")
         val mapped: List<Lut>
         val elapsed = measureTimeMillis {
-            mapped = formulas.flatMap{ mapFormula(it.second, it.first) }
+            mapped = formulas.flatMapIndexed{ idx, output ->
+                log("Mapping output ${output.first} (${idx+1}/${formulas.size})", 3)
+                mapFormula(output.second, output.first)
+            }
         }
-        log("Mapping complete! Took $elapsed ms, created ${mapped.size} LUTs total")
+        log("Mapping complete! Took $elapsed ms, created ${mapped.size} LUTs total", 4)
 
         return header + mapped.joinToString("\n") { it.toBLIF(listOf(3, 5), placeholder) } + "\n.end"
     }
 
     fun mapFormula(formula: Formula, outputName: String) : List<Lut> {
+        log("Building QRBDD for formula", 2)
         val varWeights = formula.computeVarWeights(Int.MAX_VALUE)
         val order = varWeights.toList().sortedByDescending { it.second }.map { it.first }
         val bdd = QrbddBuilder.create(formula, order)
+        log("QRBBD built, proceeding with mapping", 2)
 
         return mapQRBDD(bdd, outputName)
     }
@@ -56,14 +60,15 @@ abstract class LutMapStrategy {
         return (0 until bitWidth).map { "${strategyName}_int_${signalIdCounter}_b$it" }
     }
 
-    protected fun log(msg: String) {
-        System.err.println("[$strategyName] $msg")
+    protected fun log(msg: String, level: Int) {
+        if(level >= logLevel)
+            System.err.println("[$strategyName] $msg")
     }
 
     protected fun debugDumpBdd(bdd: Bdd) {
         outFileCounter += 1
         val filename = "$strategyName-input-${outFileCounter}.dot"
         DotSerializer.writeToFile(bdd, filename)
-        log("Dumped base BDD to $filename")
+        log("Dumped base BDD to $filename", 1)
     }
 }

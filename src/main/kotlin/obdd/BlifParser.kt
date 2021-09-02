@@ -73,7 +73,7 @@ object BlifParser {
         val formula = if(inputs.isEmpty())
                 if(table.isEmpty() || table.first() != "1") ConstFalse else ConstTrue
             else
-                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) }.simplify() // OR over all lines in the table
+                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) } // OR over all lines in the table
 
         wireFormulas[wireName] = formula
 

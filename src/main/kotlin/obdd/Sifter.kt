@@ -3,7 +3,6 @@ package obdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
 import de.tu_darmstadt.rs.logictool.common.representation.Variable
-import kotlin.math.min
 
 class Sifter(private val bdd: Bdd) {
 
@@ -13,11 +12,14 @@ class Sifter(private val bdd: Bdd) {
     fun siftFirstN(n: Int) = siftFromLevel(0, n)
 
     fun siftFromLevel(startingLevel: Int, limit: Int) {
+        System.err.print("[sifter ] ")
         val siftOrder = getVariableSiftOrder(startingLevel, limit)
         val upperLimit = bdd.variables.size - 1
         siftOrder.forEach {
+            System.err.print(".")
             findOptimalVarPosition(startingLevel, upperLimit, it.number)
         }
+        System.err.print("\r")
     }
 
     private fun getVariableSiftOrder(startingLevel: Int, limit: Int): List<Variable> {
@@ -84,7 +86,7 @@ class Sifter(private val bdd: Bdd) {
         moveVariableTo(endPoint, bestPosition)
 
         //val evo = bdd.variables.sortedBy { it.number }.joinToString(", ")
-        val size = computeSize() // keep for now as implicit garbage collect
+        computeSize() // keep for now as implicit garbage collect
         //println("EVO: $evo")
         //println("Size: $size")
     }

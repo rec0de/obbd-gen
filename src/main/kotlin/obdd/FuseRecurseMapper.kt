@@ -8,7 +8,6 @@ import kotlin.math.ceil
 import kotlin.math.log2
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.system.measureTimeMillis
 
 object FuseRecurseMapper : LutMapStrategy() {
 
@@ -21,7 +20,11 @@ object FuseRecurseMapper : LutMapStrategy() {
     private fun mapQRBDDInternal(bdd: Bdd, outputName: String, quickSift: Boolean): List<Lut> {
         // Pre-sift to find good cuts
         val sifter = Sifter(bdd)
-        if(quickSift) sifter.siftFirstN(5) else sifter.sift()
+        if(quickSift)
+            sifter.siftFirstN(5)
+        else
+            sifter.siftFirstN(20)
+
         //debugDumpBdd(bdd)
 
         // Edge case: constant bdd
@@ -34,7 +37,7 @@ object FuseRecurseMapper : LutMapStrategy() {
         // Enumerate all possible cut positions and find the one that minimizes estimated cost
         val bestCut = (0 until bdd.variables.size).minByOrNull { scoreCut(bdd, nodesByLevel, it) }!!
         val nodesUnderCut = nodesByLevel[bestCut]
-        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}, ${nodesUnderCut.size} nodes under cut")
+        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}, ${nodesUnderCut.size} nodes under cut", 0)
 
         // Compute the formulas which "activate" / lead to each node under the cut
         val pathConditions = getPathConditions(bdd, bestCut)
@@ -44,13 +47,13 @@ object FuseRecurseMapper : LutMapStrategy() {
         // such that a select signal of 011 indicates the third node under the cut (instead of e.g. 0010000)
         val packedSelectSignals = densePackExclusiveFormulas(relevantPathConditions)
         val selectSignalIDs = genSignalIDs(packedSelectSignals.size)
-        //log("Packed select signal is ${packedSelectSignals.size} bit wide")
+        log("Packed select signal is ${packedSelectSignals.size} bit wide", 0)
 
         // Using the generated select signals as input to our LUT, some free inputs remain which we will 'pack' with
         // variables from the following levels of the BDD
         val lutPackEndLevel = min(bdd.variables.size, bestCut + (lutCap - selectSignalIDs.size))
         val packVariables = bdd.variables.filter { it.number in bestCut until lutPackEndLevel }.map { it.name }
-        log("Packing variables ${packVariables.joinToString(", ")} into new LUT(s)")
+        log("Packing variables ${packVariables.joinToString(", ")} into new LUT(s)", 1)
 
         val nodesUnderLut = if(lutPackEndLevel == bdd.variables.size) listOf(bdd.oneNode) else nodesByLevel[lutPackEndLevel]
 

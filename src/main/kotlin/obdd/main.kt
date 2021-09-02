@@ -5,6 +5,8 @@ import obdd.serializers.DotSerializer
 import obdd.serializers.JsonSerializer
 import java.io.File
 
+var logLevel: Int = 0
+
 fun main(args: Array<String>) {
     val flags = args.filter { it.startsWith("--") }
     val other = args.filter { !it.startsWith("--") }
@@ -20,7 +22,13 @@ fun main(args: Array<String>) {
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
         println("\nobdd-gen --blif-map [flags] [blif file]")
         println("--out=[path]\tWrite output to this location (default: mapped.blif)")
+        println("--loglevel=[0-4]\tLog less (4) or more (0) progress information")
         return
+    }
+
+    logLevel = when(val logFlag = flags.firstOrNull{ it.startsWith("--loglevel=") }) {
+        null -> 0
+        else -> logFlag.removePrefix("--loglevel=").toInt()
     }
 
     if(flags.contains("--blif-map")) {

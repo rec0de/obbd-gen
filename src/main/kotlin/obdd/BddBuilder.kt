@@ -21,7 +21,7 @@ abstract class RecursiveSplitBddBuilder : GenericBddBuilder {
         bdd.rootNode = when(simplified) {
             ConstFalse -> bdd.zeroNode
             ConstTrue -> bdd.oneNode
-            else -> createSplit(bdd, formula, order, 0)
+            else -> createSplit(bdd, simplified, order, 0)
         }
 
         return bdd

@@ -28,7 +28,7 @@ object BaseMapper : LutMapStrategy() {
         // Enumerate all possible cut positions and find the one that minimizes estimated cost
         val bestCut = (0 until bdd.variables.size).minByOrNull { scoreCut(bdd, nodesByLevel, it) }!!
         val nodesUnderCut = nodesByLevel[bestCut]
-        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}")
+        log("Best cut at level $bestCut, cost ${scoreCut(bdd, nodesByLevel, bestCut)}", 0)
 
         // Compute the formulas which "activate" / lead to each node under the cut
         val pathConditions = getPathConditions(bdd, bestCut)
@@ -38,7 +38,7 @@ object BaseMapper : LutMapStrategy() {
         // such that a select signal of 011 indicates the third node under the cut (instead of e.g. 0010000)
         val packedSelectSignals = densePackExclusiveFormulas(relevantPathConditions)
         val selectSignalIDs = genSignalIDs(packedSelectSignals.size)
-        log("Packed select signal is ${packedSelectSignals.size} bit wide")
+        log("Packed select signal is ${packedSelectSignals.size} bit wide", 0)
         //packedSelectSignals.zip(selectSignalIDs).forEach { log("${it.second}: ${it.first.simplify()}") }
 
         val lowerMapped = mapFromLevel(bdd, nodesByLevel, bestCut, selectSignalIDs, outputName)
@@ -57,7 +57,7 @@ object BaseMapper : LutMapStrategy() {
         // variables from the following levels of the BDD
         val lutPackEndLevel = min(bdd.variables.size, startLevel + (lutCap - selectSignalIDs.size))
         val packVariables = bdd.variables.filter { it.number in startLevel until lutPackEndLevel }.map { it.name }
-        log("Packing variables ${packVariables.joinToString(", ")} into new LUT(s)")
+        log("Packing variables ${packVariables.joinToString(", ")} into new LUT(s)", 1)
 
         val nodesUnderCut = nodesByLevel[startLevel]
         val nodesUnderLut = if(lutPackEndLevel == bdd.variables.size) listOf(bdd.oneNode) else nodesByLevel[lutPackEndLevel]
