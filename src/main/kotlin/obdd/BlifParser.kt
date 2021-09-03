@@ -73,7 +73,7 @@ object BlifParser {
         val formula = if(inputs.isEmpty())
                 if(table.isEmpty() || table.first() != "1") ConstFalse else ConstTrue
             else
-                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) } // OR over all lines in the table
+                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) }.simplify() // OR over all lines in the table
 
         wireFormulas[wireName] = formula
 
@@ -95,14 +95,17 @@ object BlifParser {
 
     private fun normalizeLines(lines: List<String>) : List<String> {
         // Remove comments and excess whitespace
-        val noComments = lines.map{ it.replaceAfter('#', "").trim() }.filter { it.isNotBlank() }
+        val noComments = lines.map{ it.replaceAfter('#', "").trim() }.filter { it != "#" && it.isNotBlank() }
 
         // Resolve line concatenations
         var buffer = ""
         val res = mutableListOf<String>()
         noComments.forEach {
-            if(it.endsWith('\\'))
+            if(it.endsWith('\\')) {
                 buffer += it.removeSuffix("\\")
+                if(!buffer.endsWith(" "))
+                    buffer += " "
+            }
             else {
                 res.add(buffer + it)
                 buffer = ""
