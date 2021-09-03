@@ -10,6 +10,8 @@ abstract class LutMapStrategy {
     protected abstract val strategyName: String
     private var outFileCounter = 0
     private var signalIdCounter = 0
+    private val initialBddSizeSearchCutoff = 1000 // don't bother searching for better BDDs once one sub-1k nodes is found
+    private val initialBddSizeSearchSoftCutoff = 75000 // abort search if a sub 75k bdd is found in the first 3 attempts (intuition: later orders are last-ditch only and usually worse than the first 3)
 
     fun mapBLIF(filename: String) : String {
         val parsed = BlifParser.parse(filename)
@@ -27,16 +29,30 @@ abstract class LutMapStrategy {
             }
         }
         log("Mapping complete! Took $elapsed ms, created ${mapped.size} LUTs total", 4)
+        println("$elapsed|${mapped.size}")
 
         return header + mapped.joinToString("\n") { it.toBLIF(listOf(3, 5), placeholder) } + "\n.end"
     }
 
     fun mapFormula(formula: Formula, outputName: String) : List<Lut> {
-        log("Building QRBDD for formula", 2)
-        val varWeights = formula.computeVarWeights(Int.MAX_VALUE)
-        val order = varWeights.toList().sortedByDescending { it.second }.map { it.first }
-        val bdd = QrbddBuilder.create(formula, order)
-        log("QRBBD built, proceeding with mapping", 2)
+        // Get an assortment of promising variable orders based on different heuristics
+        val orders = BddOrderHeuristics(formula).mix()
+        var bestSize = Int.MAX_VALUE
+        var bdd: Bdd? = null
+
+        for (i in orders.indices) {
+            val candidate = QrbddBuilder.create(formula, orders[i])
+            log("Trying order #$i for a initial size of ${candidate.nodes.size} nodes", 2)
+            if(candidate.nodes.size < bestSize) {
+                bdd = candidate
+                bestSize = candidate.nodes.size
+            }
+            if(bestSize < initialBddSizeSearchCutoff || (i >= 2 && bestSize < initialBddSizeSearchSoftCutoff))
+                break
+        }
+
+        bdd!!
+        log("QRBBD built (size=${bdd.nodes.size}), proceeding with mapping", 2)
 
         return mapQRBDD(bdd, outputName)
     }

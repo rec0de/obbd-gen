@@ -1,6 +1,8 @@
 package obdd.logic
 
-class Lut(private val inputWires: Array<String>, private val outputWire: String, private val emulateFormula: Formula) {
+import obdd.BddOrderHeuristics
+
+class Lut(private var inputWires: Array<String>, private val outputWire: String, private val emulateFormula: Formula) {
     override fun toString(): String {
         return "LUT(${inputWires.joinToString(", ")})->$outputWire"
     }
@@ -12,6 +14,10 @@ class Lut(private val inputWires: Array<String>, private val outputWire: String,
 
         if(inputWires.size > 16)
             throw Exception("LUT is too large to be converted to cubes (max 16 inputs, got ${inputWires.size})")
+
+        // Reorder input wires for smaller truth tables
+        // this appears to only have a tiny effect but I think it's cool that we can re-use the heuristic here so I'll leave it in
+        inputWires = BddOrderHeuristics(emulateFormula).subGraphComplexity().toTypedArray()
 
         val paddedInputs = inputWires.joinToString(" ") + " $placeholder".repeat(paddedSize - inputWires.size)
         val header = ".names $paddedInputs $outputWire\n"

@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
         println("--reduce\tProduce a fully reduced bdd")
         println("--quasireduce\tProduce a quasi-reduced bdd")
         println("--json\tOutput a json representation rather than a dot graph")
-        println("--order=[none|weight|a,b,c]\tSpecify variable evaluation order (default: weight)")
+        println("--order=[none|weight|count|subgraph|a,b,c]\tSpecify variable evaluation order (default: weight)")
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
         println("\nobdd-gen --blif-map [flags] [blif file]")
         println("--out=[path]\tWrite output to this location (default: mapped.blif)")
@@ -46,14 +46,16 @@ fun main(args: Array<String>) {
     println("Parsed input formula: $formula")
 
     // Compute order according to flag / verify given order contains all required vars
-    val varWeights = formula.computeVarWeights(Int.MAX_VALUE)
+    val heuristics = BddOrderHeuristics(formula)
     val order = when(val orderFlag = flags.firstOrNull{ it.startsWith("--order=") }) {
-        "--order=none" -> varWeights.keys.toList()
-        "--order=weight", null -> varWeights.toList().sortedByDescending { it.second }.map { it.first }
+        "--order=none" -> heuristics.variables.toList()
+        "--order=count" -> heuristics.varCount()
+        "--order=subgraph" -> heuristics.subGraphComplexity()
+        "--order=weight", null -> heuristics.varWeight()
         else -> {
             val varList = orderFlag.removePrefix("--order=").split(",")
-            if(varWeights.keys.any{ !varList.contains(it) })
-                throw RuntimeException("Given variable order '${varList.joinToString(", ")}' does not contain all variables '${varWeights.keys.joinToString(", ")}'")
+            if(heuristics.variables.any{ !varList.contains(it) })
+                throw RuntimeException("Given variable order '${varList.joinToString(", ")}' does not contain all variables '${heuristics.variables.joinToString(", ")}'")
             varList
         }
     }

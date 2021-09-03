@@ -7,6 +7,8 @@ interface Formula {
     fun simplify(): Formula = simplify("", false)
     fun simplify(varName: String, interpretation: Boolean): Formula
     fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
+    fun computeVarCounts(): Map<String, Int>
+    fun size(): Int = 1
     fun synEq(other: Formula): Boolean
 }
 
@@ -30,6 +32,7 @@ class Var(val name: String) : Formula {
     }
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf(name to baseWeight)
+    override fun computeVarCounts() = mapOf(name to 1)
     override fun toString() = name
 }
 
@@ -40,6 +43,7 @@ object ConstTrue : Formula {
     override fun synEq(other: Formula) = other == this
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
+    override fun computeVarCounts() = mapOf<String,Int>()
     override fun toString() = "true"
 }
 
@@ -50,6 +54,7 @@ object ConstFalse : Formula {
     override fun synEq(other: Formula) = other == this
 
     override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
+    override fun computeVarCounts() = mapOf<String,Int>()
     override fun toString() = "false"
 }
 
@@ -68,6 +73,8 @@ class Not(val child: Formula) : Formula {
     override fun synEq(other: Formula) = other is Not && child.synEq(other.child)
 
     override fun computeVarWeights(baseWeight: Int) = child.computeVarWeights(baseWeight)
+    override fun computeVarCounts() = child.computeVarCounts()
+    override fun size() = 1 + child.size()
     override fun toString() = "!${child}"
 }
 
@@ -83,6 +90,20 @@ abstract class BinOp(val left: Formula, val right: Formula) : Formula {
 
         return leftWeights
     }
+
+    override fun computeVarCounts() : Map<String,Int> {
+        val leftCounts = left.computeVarCounts().toMutableMap()
+        val rightCounts = right.computeVarCounts()
+
+        rightCounts.forEach {
+            val leftValue = leftCounts.getOrDefault(it.key, 0)
+            leftCounts[it.key] = leftValue + it.value
+        }
+
+        return leftCounts
+    }
+
+    override fun size() = 1 + left.size() + right.size()
 }
 
 class And(left : Formula, right: Formula) : BinOp(left, right) {

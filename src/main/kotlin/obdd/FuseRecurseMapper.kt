@@ -21,9 +21,9 @@ object FuseRecurseMapper : LutMapStrategy() {
         // Pre-sift to find good cuts
         val sifter = Sifter(bdd)
         if(quickSift)
-            sifter.siftFirstN(5)
+            sifter.siftFirstN(25)
         else
-            sifter.siftFirstN(20)
+            sifter.sift()
 
         //debugDumpBdd(bdd)
 
@@ -88,7 +88,9 @@ object FuseRecurseMapper : LutMapStrategy() {
         }
 
         // These are the LUTs representing the select signals / everything above the entry layer
-        val upperMapped = packedSelectSignals.zip(selectSignalIDs).flatMap { mapFormula(it.first, it.second) }
+        val upperMapped = packedSelectSignals.zip(selectSignalIDs).flatMap {
+            mapFormula(it.first, it.second)
+        }
 
         return upperMapped + lowerMapped
     }
