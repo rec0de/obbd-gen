@@ -1,0 +1,9 @@
+# The area/delay of k-variable LUTs:
+# abc requires all size options up to k, so we simulate a 3/5 LUT library using area cost
+# optimizing for minimal area by setting all delays to zero
+# k  area   delay
+1      1      1
+2      1      1
+3      1      1
+4      2      1
+5      2      1

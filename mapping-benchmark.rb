@@ -7,38 +7,131 @@ abc = {}
 def countLUTs(filename)
 	lutsizes = File.readlines(filename).filter{ |l| l.start_with?(".names") }.map { |l| (l.split(" ").length - 2) < 4 ? 3 : 5 }
 	tally = lutsizes.uniq.map { |s| [s, lutsizes.count(s)] }.to_h
-	tally[5] + tally[3] / 2
+	five = tally[5] ? tally[5] : 0
+	three = tally[3] ? tally[3] : 0
+	five + three / 2
 end
 
-Dir.each_child("benchmark/mapping/blif/MCNC-big20"){|file| 
-	next if (file.split(".")[-1] != 'blif')
-	title = file.split(".")[0...-1].join('.')
-	fullpath = "benchmark/mapping/blif/MCNC-big20/#{file}"
-	
-	puts "Running benchmark for #{title}..."
-	output = ""
-	endToEnd = Benchmark.measure {
-		output = `java -jar build/libs/obdd-gen-1.0-SNAPSHOT-all.jar --blif-map --loglevel=5 --out=benchmark/mapping/fusemap/#{title}.blif #{fullpath}`
+def getDepth(filename)
+	abcOut = `abc -c "read #{filename}; print_level;"`
+	/Level = \s*([0-9]+)\./.match(abcOut.split("\n")[-1]).captures[0].to_i
+end
+
+def getBenchmarkFiles
+	Dir.each_child("benchmark/mapping/blif/MCNC-big20").filter{ |file| file.split(".")[-1] == 'blif' }.map{ |file|
+		title = file.split(".")[0...-1].join('.')
+		fullpath = "benchmark/mapping/blif/MCNC-big20/#{file}"
+		[title, fullpath]
 	}
+end
 
- 	verification = `abc -c "cec benchmark/mapping/fusemap/#{title}.blif #{fullpath}"`
- 	mapTime = output.chomp.split("|")[0]
- 	lutCount = countLUTs("benchmark/mapping/fusemap/#{title}.blif")
+def genABCregular
+	results = {}
+	outpath = "benchmark/mapping/abc/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running abc reference mapping for #{title}..."
+		time = Benchmark.measure {
+			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depth = getDepth("#{outpath}#{title}.blif")
 
- 	puts "#{title} completed, #{lutCount} LUTs, #{mapTime}ms map time, #{(endToEnd.real * 1000).round}ms end to end"
- 	puts verification =~ /Networks are equivalent/ ? "VERIFICATION OK" : "VERIFICATION FAILURE"
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth}
+	}
+	results
+end
 
- 	puts "Running abc reference mapping for #{title}..."
- 	output = ""
- 	abcEndToEnd = Benchmark.measure {
-  		output = `abc -c "read_lut benchmark/mapping/lutlibrary.lut; read #{fullpath}; if; lutpack; write benchmark/mapping/abc-if/#{title}.blif"`
- 	}
- 	abcLUTs = countLUTs("benchmark/mapping/abc-if/#{title}.blif")
- 	puts "abc ref for #{title} completed, #{abcLUTs} LUTs, #{(abcEndToEnd.real * 1000).round}ms end to end"
+def genABCdelay
+	results = {}
+	outpath = "benchmark/mapping/abc-delay/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running abc-delay reference mapping for #{title}..."
+		time = Benchmark.measure {
+			`abc -c "read_lut benchmark/mapping/library-delay.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depthOutput = `abc -c "read #{outpath}#{title}.blif; print_level;"`
+		depth = getDepth("#{outpath}#{title}.blif")
 
- 	results[title] = {:e2e => (endToEnd.real * 1000).round, :luts => lutCount, :map => mapTime.to_i}
- 	abc[title] = {:e2e => (abcEndToEnd.real * 1000).round, :luts => abcLUTs}
-}
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth}
+	}
+	results
+end
 
-puts JSON.dump(results)
-puts JSON.dump(abc)
+def genABCisolated
+	results = {}
+	outpath = "benchmark/mapping/abc-isolated/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running abc-isolated reference mapping for #{title}..."
+		blif = File.read(path)
+		outputLine = /\.outputs(( |\n)(?<wire>[^\s\\\.]+)( \\)?)+/.match(blif)[0]
+		outputs = outputLine.gsub("\\", "").gsub("\n", " ").sub(".outputs ", "").split(" ")
+		luts = 0
+
+		outputs.each { |out|
+		 	isolated = blif.sub(outputLine, ".outputs #{out}")
+		 	File.open("/tmp/isolated.blif", "w") { |file| file.puts(isolated) }
+		 	`abc -c "read_lut benchmark/mapping/library.lut; read /tmp/isolated.blif; if; lutpack; write #{outpath}#{title}-#{out}.blif"`
+		 	luts += countLUTs("#{outpath}#{title}-#{out}.blif")
+		}
+		results[title] = {:e2e => 0, :luts => luts, :depth => 0}
+	}
+	results
+end
+
+def genFusemapRegular
+	results = {}
+	outpath = "benchmark/mapping/fusemap/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running fusemap mapping for #{title}..."
+		output = ""
+		time = Benchmark.measure {
+			output = `java -jar build/libs/obdd-gen-1.0-SNAPSHOT-all.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depth = getDepth("#{outpath}#{title}.blif")
+		mapTime = output.chomp.split("|")[0].to_i
+
+		verification = `abc -c "cec #{outpath}#{title}.blif #{path}"`
+		puts verification =~ /Networks are equivalent/ ? "VERIFICATION OK" : "VERIFICATION FAILURE"
+
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth, :map => mapTime}
+	}
+	results
+end
+
+def genFusemapAgressive
+	results = {}
+	outpath = "benchmark/mapping/fusemap-agressive/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running fusemap-agressive mapping for #{title}..."
+		output = ""
+		time = Benchmark.measure {
+			output = `java -jar fusemap-agressive.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depth = getDepth("#{outpath}#{title}.blif")
+		mapTime = output.chomp.split("|")[0].to_i
+
+		verification = `abc -c "cec #{outpath}#{title}.blif #{path}"`
+		puts verification =~ /Networks are equivalent/ ? "VERIFICATION OK" : "VERIFICATION FAILURE"
+
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth, :map => mapTime}
+	}
+	results
+end
+
+#abc = genABCregular()
+#abcDelay = genABCdelay()
+#abcIsolated = genABCisolated()
+#fusemap = genFusemapRegular()
+fusemapAgressive = genFusemapAgressive()
+
+#puts JSON.dump(abc)
+#puts JSON.dump(abcDelay)
+#puts JSON.dump(abcIsolated)
+puts JSON.dump(fusemapAgressive)
