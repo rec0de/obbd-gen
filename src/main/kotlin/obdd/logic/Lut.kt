@@ -15,6 +15,9 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
         if(inputWires.size > 16)
             throw Exception("LUT is too large to be converted to cubes (max 16 inputs, got ${inputWires.size})")
 
+        if(inputWires.isEmpty())
+            return ".names $outputWire\n${if(emulateFormula.simplify() == ConstTrue) "1" else "0"}"
+
         // Reorder input wires for smaller truth tables
         // this appears to only have a tiny effect but I think it's cool that we can re-use the heuristic here so I'll leave it in
         inputWires = BddOrderHeuristics(emulateFormula).subGraphComplexity().toTypedArray()
