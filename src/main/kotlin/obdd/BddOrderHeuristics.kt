@@ -25,6 +25,37 @@ class BddOrderHeuristics(val formula: Formula) {
         return varScores.toList().sortedByDescending { it.second }.map { it.first }
     }
 
+    fun balancedSubGraphComplexity(): List<String> {
+        val variables = variables.toMutableSet()
+        val order = mutableListOf<String>()
+        var simplified = formula
+        var newSimplified = simplified
+        var bestSize = Int.MAX_VALUE
+
+        while (variables.isNotEmpty()) {
+            var bestVar = variables.first()
+
+            variables.forEach { v ->
+                val candTrue = simplified.simplify(simplifyNonce++, v, true)
+                val sizeTrue = candTrue.size()
+                val candFalse = simplified.simplify(simplifyNonce++, v, false)
+                val sizeFalse = candFalse.size()
+
+                if (sizeTrue + sizeFalse < bestSize) {
+                    newSimplified = if(sizeFalse < sizeTrue) candTrue else candFalse
+                    bestSize = sizeTrue + sizeFalse
+                    bestVar = v
+                }
+            }
+
+            variables.remove(bestVar)
+            order.add(bestVar)
+            simplified = newSimplified
+        }
+
+        return order
+    }
+
     fun subGraphComplexity(): List<String> {
         val variables = variables.toMutableSet()
         val order = mutableListOf<String>()
@@ -36,7 +67,7 @@ class BddOrderHeuristics(val formula: Formula) {
             var bestVar = variables.first()
 
             variables.forEach { v ->
-                val candTrue = simplified.simplify(v, true)
+                val candTrue = simplified.simplify(simplifyNonce++, v, true)
                 val sizeTrue = candTrue.size()
                 if (sizeTrue < bestSize) {
                     newSimplified = candTrue
@@ -44,7 +75,7 @@ class BddOrderHeuristics(val formula: Formula) {
                     bestVar = v
                 }
 
-                val candFalse = simplified.simplify(v, false)
+                val candFalse = simplified.simplify(simplifyNonce++, v, false)
                 val sizeFalse = candFalse.size()
                 if (sizeFalse < bestSize) {
                     newSimplified = candFalse

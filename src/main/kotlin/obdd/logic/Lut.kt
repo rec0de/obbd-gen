@@ -1,6 +1,7 @@
 package obdd.logic
 
 import obdd.BddOrderHeuristics
+import obdd.simplifyNonce
 
 class Lut(private var inputWires: Array<String>, private val outputWire: String, private val emulateFormula: Formula) {
     override fun toString(): String {
@@ -16,7 +17,7 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
             throw Exception("LUT is too large to be converted to cubes (max 16 inputs, got ${inputWires.size})")
 
         if(inputWires.isEmpty())
-            return ".names $outputWire\n${if(emulateFormula.simplify() == ConstTrue) "1" else "0"}"
+            return ".names $outputWire\n${if(emulateFormula.simplify(simplifyNonce++) == ConstTrue) "1" else "0"}"
 
         // Reorder input wires for smaller truth tables
         // this appears to only have a tiny effect but I think it's cool that we can re-use the heuristic here so I'll leave it in
@@ -47,8 +48,8 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
                     val nextVar = inputWires[nextVarIndex]
                     val oneCube = cube and ((0b01u shl nextVarIndex*2) xor UInt.MAX_VALUE)
                     val zeroCube = cube and ((0b10u shl nextVarIndex*2) xor UInt.MAX_VALUE)
-                    queue.add(Triple(formula.simplify(nextVar, true), nextVarIndex + 1, oneCube))
-                    queue.add(Triple(formula.simplify(nextVar, false), nextVarIndex + 1, zeroCube))
+                    queue.add(Triple(formula.simplify(simplifyNonce++, nextVar, true), nextVarIndex + 1, oneCube))
+                    queue.add(Triple(formula.simplify(simplifyNonce++, nextVar, false), nextVarIndex + 1, zeroCube))
                 }
             }
         }

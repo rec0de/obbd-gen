@@ -10,8 +10,7 @@ abstract class LutMapStrategy {
     protected abstract val strategyName: String
     private var outFileCounter = 0
     private var signalIdCounter = 0
-    private val initialBddSizeSearchCutoff = 1000 // don't bother searching for better BDDs once one sub-1k nodes is found
-    private val initialBddSizeSearchSoftCutoff = 75000 // abort search if a sub 75k bdd is found in the first 3 attempts (intuition: later orders are last-ditch only and usually worse than the first 3)
+    private val bddSizeSearchCutoff = 1000 // don't bother searching for better BDDs once one sub-1k nodes is found
 
     fun mapBLIF(filename: String) : String {
         val parsed = BlifParser.parse(filename)
@@ -37,18 +36,25 @@ abstract class LutMapStrategy {
     fun mapFormula(formula: Formula, outputName: String) : List<Lut> {
         // Get an assortment of promising variable orders based on different heuristics
         val orders = BddOrderHeuristics(formula).mix()
+        log("Candidate orders generated", 2)
         var bestSize = Int.MAX_VALUE
         var bdd: Bdd? = null
 
         for (i in orders.indices) {
-            val candidate = QrbddBuilder.create(formula, orders[i])
-            log("Trying order #$i for a initial size of ${candidate.nodes.size} nodes", 2)
-            if(candidate.nodes.size < bestSize) {
-                bdd = candidate
-                bestSize = candidate.nodes.size
+            QrbddBuilder.setSizeCutoff(bestSize) // Don't bother continuing a BDD build once it has surpassed the current best node count
+            try {
+                val candidate = QrbddBuilder.create(formula, orders[i])
+                log("Trying order #$i for a initial size of ${candidate.nodes.size} nodes", 2)
+                if(candidate.nodes.size < bestSize) {
+                    bdd = candidate
+                    bestSize = candidate.nodes.size
+                }
+                if(bestSize < bddSizeSearchCutoff)
+                    break
             }
-            if(bestSize < initialBddSizeSearchCutoff || (i >= 2 && bestSize < initialBddSizeSearchSoftCutoff))
-                break
+            catch(e: BddCutoffReached) {
+                log("Bdd size cutoff reached for attempt #$i", 2)
+            }
         }
 
         bdd!!

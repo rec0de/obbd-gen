@@ -2,17 +2,31 @@ package obdd.logic
 
 import java.lang.Exception
 
-interface Formula {
-    fun eval(varMap: Map<String, Boolean>): Boolean
-    fun simplify(): Formula = simplify("", false)
-    fun simplify(varName: String, interpretation: Boolean): Formula
-    fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
-    fun computeVarCounts(): Map<String, Int>
-    fun size(): Int = 1
-    fun synEq(other: Formula): Boolean
+abstract class Formula {
+    abstract fun eval(varMap: Map<String, Boolean>): Boolean
+
+    fun simplify(nonce: Int): Formula = simplify(nonce, "", false)
+    fun simplify(nonce: Int, varName: String, interpretation: Boolean): Formula {
+        if(simplified != null && nonce == this.nonce)
+            return simplified!!
+        this.nonce = nonce
+        simplified = internalSimplify(varName, interpretation)
+        return simplified!!
+    }
+
+    abstract fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
+    abstract fun computeVarCounts(): Map<String, Int>
+    open fun size(): Int = 1
+    abstract fun synEq(other: Formula): Boolean
+
+    // Once logic formulas are not strictly trees anymore, we need to make sure to only simplify each unique part once
+    // to do so, we cache the most recent simplification with a 'nonce' to ensure cache-validity
+    protected abstract fun internalSimplify(varName: String, interpretation: Boolean): Formula
+    protected var nonce: Int = 0
+    private var simplified: Formula? = null
 }
 
-class Var(val name: String) : Formula {
+class Var(val name: String) : Formula() {
     override fun eval(varMap: Map<String, Boolean>): Boolean {
         return if(varMap.containsKey(name))
             varMap[name]!!
@@ -20,7 +34,7 @@ class Var(val name: String) : Formula {
             throw Exception("Variable assignment does not contain value for '$name'")
     }
 
-    override fun simplify(varName: String, interpretation: Boolean): Formula {
+    override fun internalSimplify(varName: String, interpretation: Boolean): Formula {
         return if(varName == name)
             if(interpretation) ConstTrue else ConstFalse
         else
@@ -36,9 +50,9 @@ class Var(val name: String) : Formula {
     override fun toString() = name
 }
 
-object ConstTrue : Formula {
+object ConstTrue : Formula() {
     override fun eval(varMap: Map<String, Boolean>) = true
-    override fun simplify(varName: String, interpretation: Boolean) = this
+    override fun internalSimplify(varName: String, interpretation: Boolean) = this
 
     override fun synEq(other: Formula) = other == this
 
@@ -47,9 +61,9 @@ object ConstTrue : Formula {
     override fun toString() = "true"
 }
 
-object ConstFalse : Formula {
+object ConstFalse : Formula() {
     override fun eval(varMap: Map<String, Boolean>) = false
-    override fun simplify(varName: String, interpretation: Boolean) = this
+    override fun internalSimplify(varName: String, interpretation: Boolean) = this
 
     override fun synEq(other: Formula) = other == this
 
@@ -58,11 +72,11 @@ object ConstFalse : Formula {
     override fun toString() = "false"
 }
 
-class Not(val child: Formula) : Formula {
+class Not(val child: Formula) : Formula() {
     override fun eval(varMap: Map<String, Boolean>) = !child.eval(varMap)
 
-    override fun simplify(varName: String, interpretation: Boolean): Formula {
-        return when (val childSim = child.simplify(varName, interpretation)) {
+    override fun internalSimplify(varName: String, interpretation: Boolean): Formula {
+        return when (val childSim = child.simplify(nonce, varName, interpretation)) {
             ConstTrue -> ConstFalse
             ConstFalse -> ConstTrue
             is Not -> childSim.child
@@ -78,7 +92,7 @@ class Not(val child: Formula) : Formula {
     override fun toString() = "!${child}"
 }
 
-abstract class BinOp(val left: Formula, val right: Formula) : Formula {
+abstract class BinOp(val left: Formula, val right: Formula) : Formula() {
     override fun computeVarWeights(baseWeight: Int): MutableMap<String,Int> {
         val leftWeights = left.computeVarWeights(baseWeight / 2)
         val rightWeights = right.computeVarWeights(baseWeight / 2)
@@ -111,13 +125,13 @@ class And(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) && right.eval(varMap)
     }
 
-    override fun simplify(varName: String, interpretation: Boolean): Formula {
-        val leftSim = left.simplify(varName, interpretation)
+    override fun internalSimplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(nonce, varName, interpretation)
 
         if(leftSim == ConstFalse)
             return ConstFalse
 
-        val rightSim = right.simplify(varName, interpretation)
+        val rightSim = right.simplify(nonce, varName, interpretation)
 
         return when {
             rightSim == ConstFalse -> ConstFalse
@@ -137,9 +151,9 @@ class Or(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) || right.eval(varMap)
     }
 
-    override fun simplify(varName: String, interpretation: Boolean): Formula {
-        val leftSim = left.simplify(varName, interpretation)
-        val rightSim = right.simplify(varName, interpretation)
+    override fun internalSimplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(nonce, varName, interpretation)
+        val rightSim = right.simplify(nonce, varName, interpretation)
         return when {
             leftSim == ConstTrue || rightSim == ConstTrue -> ConstTrue
             leftSim == ConstFalse -> rightSim
@@ -158,9 +172,9 @@ class Equiv(left : Formula, right: Formula) : BinOp(left, right) {
         return left.eval(varMap) == right.eval(varMap)
     }
 
-    override fun simplify(varName: String, interpretation: Boolean): Formula {
-        val leftSim = left.simplify(varName, interpretation)
-        val rightSim = right.simplify(varName, interpretation)
+    override fun internalSimplify(varName: String, interpretation: Boolean): Formula {
+        val leftSim = left.simplify(nonce, varName, interpretation)
+        val rightSim = right.simplify(nonce, varName, interpretation)
 
         return when {
             leftSim == rightSim -> ConstTrue

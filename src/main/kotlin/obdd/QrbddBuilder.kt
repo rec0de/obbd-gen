@@ -13,6 +13,7 @@ object QrbddBuilder : RecursiveSplitBddBuilder() {
     // Keep references to "short circuit" constructions to const 1 / const 0 that are already available
     private val zeroRail : MutableMap<Int, BddNode> = mutableMapOf()
     private val oneRail : MutableMap<Int, BddNode> = mutableMapOf()
+    private var cutoff: Int = 0
 
     override fun create(formula: Formula, stringOrder: List<String>): Bdd {
         zeroRail.clear()
@@ -20,12 +21,16 @@ object QrbddBuilder : RecursiveSplitBddBuilder() {
         return super.create(formula, stringOrder)
     }
 
+    fun setSizeCutoff(size: Int) {
+        cutoff = size
+    }
+
     override fun createSplit(bdd: Bdd, formula: Formula, order: Array<Variable>, vi: Int) : BddNode {
         val variable = order[vi]
         val node = BddNode(variable)
 
         // One branch
-        val oneFormula = formula.simplify(variable.name, true)
+        val oneFormula = formula.simplify(simplifyNonce++, variable.name, true)
 
         node.oneChild = when(oneFormula) {
             ConstTrue -> quickShortCircuit(bdd, order, vi + 1, true)
@@ -34,7 +39,7 @@ object QrbddBuilder : RecursiveSplitBddBuilder() {
         }
 
         // Zero branch
-        val zeroFormula = formula.simplify(variable.name, false)
+        val zeroFormula = formula.simplify(simplifyNonce++, variable.name, false)
 
         node.zeroChild = when {
             oneFormula.synEq(zeroFormula) -> node.oneChild // if both branch formulas are syntactically equal, the subtrees will be equal as well
@@ -44,6 +49,8 @@ object QrbddBuilder : RecursiveSplitBddBuilder() {
         }
 
         bdd.nodes.add(node)
+        if(cutoff != 0 && bdd.nodes.size > cutoff)
+            throw BddCutoffReached()
         return node
     }
 
@@ -70,3 +77,5 @@ object QrbddBuilder : RecursiveSplitBddBuilder() {
         }
     }
 }
+
+class BddCutoffReached(): Exception("pre-set bdd size cutoff reached, aborting generation")

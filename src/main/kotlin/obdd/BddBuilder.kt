@@ -14,7 +14,7 @@ interface GenericBddBuilder {
 abstract class RecursiveSplitBddBuilder : GenericBddBuilder {
     override fun create(formula: Formula, stringOrder: List<String>) : Bdd {
         val order = genOrder(stringOrder)
-        val simplified = formula.simplify() // Perform generic simplification
+        val simplified = formula.simplify(simplifyNonce++) // Perform generic simplification
 
         val bdd = Bdd(order)
 
@@ -43,7 +43,7 @@ object BddBuilder : RecursiveSplitBddBuilder() {
         val node = BddNode(variable)
 
         // One branch
-        val oneFormula = formula.simplify(variable.name, true)
+        val oneFormula = formula.simplify(simplifyNonce++, variable.name, true)
 
         node.oneChild = when(oneFormula) {
             ConstTrue -> bdd.oneNode
@@ -52,7 +52,7 @@ object BddBuilder : RecursiveSplitBddBuilder() {
         }
 
         // Zero branch
-        val zeroFormula = formula.simplify(variable.name, false)
+        val zeroFormula = formula.simplify(simplifyNonce++, variable.name, false)
 
         // if both branch formulas are syntactically equal, the subtrees will be equal as well
         if(SYN_EQ && oneFormula.synEq(zeroFormula))

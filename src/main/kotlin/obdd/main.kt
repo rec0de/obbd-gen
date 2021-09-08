@@ -6,6 +6,7 @@ import obdd.serializers.JsonSerializer
 import java.io.File
 
 var logLevel: Int = 0
+var simplifyNonce: Int = 0
 
 fun main(args: Array<String>) {
     val flags = args.filter { it.startsWith("--") }

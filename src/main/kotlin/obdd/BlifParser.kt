@@ -2,7 +2,6 @@ package obdd
 
 import obdd.logic.*
 import java.io.File
-import java.lang.Exception
 
 object BlifParser {
 
@@ -12,14 +11,14 @@ object BlifParser {
     // Cache of already evaluated formulas
     private val wireFormulas: MutableMap<String, Formula> = mutableMapOf()
 
-    private var inputVars: Set<String> = emptySet()
+    private var inputVars: MutableSet<String> = mutableSetOf()
 
     // The return type is a bit messy, but it's basically: (input vars, {output vars -> output formula})
     fun parse(filename: String) : Pair<Collection<String>, List<Pair<String,Formula>>> {
         gates.clear()
         wireFormulas.clear()
-        inputVars = emptySet()
-        var outputVars: List<String> = emptyList()
+        inputVars.clear()
+        val outputVars: MutableList<String> = mutableListOf()
 
         val lines = normalizeLines(File(filename).readLines())
 
@@ -30,7 +29,7 @@ object BlifParser {
 
             when {
                 line.startsWith(".names") -> {
-                    val wireNames = line.removePrefix(".names ").split(' ')
+                    val wireNames = line.removePrefix(".names ").trim().split(' ')
                     val output = wireNames.last()
                     val inputs = wireNames.dropLast(1)
                     val gateSpec = mutableListOf<String>()
@@ -41,9 +40,15 @@ object BlifParser {
                     }
                     gates[output] = Pair(inputs, gateSpec)
                 }
-                line.startsWith(".inputs") -> inputVars = line.removePrefix(".inputs ").split(' ').toSet()
-                line.startsWith(".outputs") -> outputVars = line.removePrefix(".outputs ").split(' ')
-                line.startsWith(".model") -> { } // We don't really care about the model name
+                line.startsWith(".inputs") -> inputVars.addAll(line.removePrefix(".inputs ").trim().split(' '))
+                line.startsWith(".outputs") -> outputVars.addAll(line.removePrefix(".outputs ").trim().split(' '))
+                line.startsWith(".latch") -> {
+                    // We 'ignore' latches by interpreting them as independent input/output pairs
+                    val parts = line.removePrefix(".latch").trim().split(' ').filter { it.isNotEmpty() }
+                    outputVars.add(parts[0])
+                    inputVars.add(parts[1])
+                }
+                line.startsWith(".model") || line.startsWith(".wire_load_slope") -> { } // We don't really care about the model name or wire models
                 line.startsWith(".end") -> break // We'll only read the first model of the file (TODO?)
                 else -> throw Exception("BLIF parse error: Unrecognized command '$line'")
             }
@@ -61,9 +66,10 @@ object BlifParser {
             return Var(wireName)
 
         // If we have previously evaluated this sub-formula, just return a reference
-        // Caching can cause lots of headaches later because the AST is not a proper tree anymore, so we'll clone formulas on re-use and hope that cloning is much faster than re-parsing for now
-        if(wireFormulas.containsKey(wireName))
-            return wireFormulas[wireName]!!.simplify() // simplify clones implicitly, maybe worth adding a dedicated clone function?
+        // Honestly I'm not super comfortable with this cache as it introduces lots of aliasing, but it seems to work okay
+        if(wireFormulas.containsKey(wireName)) {
+            return wireFormulas[wireName]!!
+        }
 
         // If no cached evaluation exists, compute formula the hard way
         val gateInfo = gates[wireName]!!
@@ -73,10 +79,9 @@ object BlifParser {
         val formula = if(inputs.isEmpty())
                 if(table.isEmpty() || table.first() != "1") ConstFalse else ConstTrue
             else
-                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) }.simplify() // OR over all lines in the table
+                table.fold(ConstFalse as Formula){ acc, line -> Or(acc, gateLineToFormula(inputs, line)) }.simplify(simplifyNonce++) // OR over all lines in the table
 
         wireFormulas[wireName] = formula
-
         return formula
     }
 
