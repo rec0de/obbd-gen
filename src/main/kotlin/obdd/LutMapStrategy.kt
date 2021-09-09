@@ -1,6 +1,7 @@
 package obdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
+import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
 import obdd.logic.*
 import obdd.serializers.DotSerializer
 import kotlin.system.measureTimeMillis
@@ -10,7 +11,7 @@ abstract class LutMapStrategy {
     protected abstract val strategyName: String
     private var outFileCounter = 0
     private var signalIdCounter = 0
-    private val bddSizeSearchCutoff = 1000 // don't bother searching for better BDDs once one sub-1k nodes is found
+    private val bddSizeSearchCutoff = 10 // don't bother searching for better BDDs once a very small one is found
 
     fun mapBLIF(filename: String) : String {
         val parsed = BlifParser.parse(filename)
@@ -38,16 +39,21 @@ abstract class LutMapStrategy {
         val orders = BddOrderHeuristics(formula).mix()
         log("Candidate orders generated", 2)
         var bestSize = Int.MAX_VALUE
+        var bestPreSize = Int.MAX_VALUE
         var bdd: Bdd? = null
 
         for (i in orders.indices) {
-            QrbddBuilder.setSizeCutoff(bestSize) // Don't bother continuing a BDD build once it has surpassed the current best node count
+            // To avoid getting stuck building very large BDDs, assume nothing good can come from a BDD that is more than twice as large pre-reduction as the current best BDD was pre-reduction
+            QrbddBuilder.setSizeCutoff(if(bestPreSize == Int.MAX_VALUE) bestPreSize else bestPreSize * 2)
             try {
                 val candidate = QrbddBuilder.create(formula, orders[i])
+                val preSize = candidate.nodes.size
+                BddReducer().reduceBdd(candidate, true)
                 log("Trying order #$i for a initial size of ${candidate.nodes.size} nodes", 2)
                 if(candidate.nodes.size < bestSize) {
                     bdd = candidate
                     bestSize = candidate.nodes.size
+                    bestPreSize = preSize
                 }
                 if(bestSize < bddSizeSearchCutoff)
                     break
