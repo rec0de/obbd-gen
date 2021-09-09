@@ -1,6 +1,5 @@
 package obdd
 
-import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
 import obdd.bdd.*
 import obdd.serializers.DotSerializer
 import obdd.serializers.JsonSerializer
@@ -80,8 +79,10 @@ fun main(args: Array<String>) {
     }
 
     // Reduce, if necessary
-    if(quasireduce || reduce)
-        BddReducer().reduceBdd(bdd, quasireduce)
+    when {
+        quasireduce -> QrbddReducer.reduceBdd(bdd)
+        reduce -> BddReducer.reduceBdd(bdd)
+    }
 
     if(flags.contains("--sift")) {
         val sifter = Sifter(bdd)

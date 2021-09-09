@@ -1,7 +1,7 @@
 package obdd.test
 
-import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
 import obdd.bdd.BddBuilder
+import obdd.bdd.BddReducer
 import obdd.FormulaConverter
 import obdd.bdd.NaiveBddBuilder
 import obdd.logic.Formula
@@ -15,7 +15,7 @@ fun main() {
 
     val minLength = formulas.minByOrNull { it.length }!!.length
     val maxLength = formulas.maxByOrNull { it.length }!!.length
-    val avgLength = formulas.sumBy { it.length } / formulas.size
+    val avgLength = formulas.sumOf { it.length } / formulas.size
 
     println("Loaded ${formulas.size} formulas")
     println("Formula length (min/avg/max): $minLength/$avgLength/$maxLength")
@@ -25,18 +25,17 @@ fun main() {
         parsed = formulas.map{ FormulaConverter.parse(it) }
     }
 
-    println("Parsing took ${parseTime.inMilliseconds} ms")
+    println("Parsing took ${parseTime.inWholeMilliseconds} ms")
 
     val factory = NaiveBddBuilder()
-    val reducer = BddReducer()
 
-    val avgVars = parsed.sumBy { it.computeVarWeights(Int.MAX_VALUE).keys.size }.toDouble() / parsed.size
+    val avgVars = parsed.sumOf { it.computeVarWeights(Int.MAX_VALUE).keys.size }.toDouble() / parsed.size
     val maxVars = parsed.maxByOrNull { it.computeVarWeights(Int.MAX_VALUE).keys.size }!!.computeVarWeights(Int.MAX_VALUE).keys.size
     println("Avg num of vars $avgVars")
     println("Max num of vars $maxVars")
 
     //naiveReduced(factory, reducer, parsed)
-    synSimReduced(reducer, parsed)
+    synSimReduced(parsed)
     //naive(factory, parsed)
     //synSim(parsed)
 }
@@ -53,7 +52,7 @@ fun naive(factory: NaiveBddBuilder, parsed: List<Formula>) {
     }
 
     println("Naive generation")
-    println("Took ${naiveTime.inMilliseconds} ms")
+    println("Took ${naiveTime.inWholeMilliseconds} ms")
     println("Created $naiveNodes nodes total")
 }
 
@@ -69,7 +68,7 @@ fun synSim(parsed: List<Formula>) {
     }
 
     println("Syntactic simplification")
-    println("Took ${time.inMilliseconds} ms")
+    println("Took ${time.inWholeMilliseconds} ms")
     println("Created $nodes nodes total")
 }
 
@@ -80,29 +79,29 @@ fun naiveReduced(factory: NaiveBddBuilder, reducer: BddReducer, parsed: List<For
         parsed.forEach { formula ->
             val order = formula.computeVarWeights(Int.MAX_VALUE).toList().sortedByDescending { it.second }.map { it.first }
             val bdd = factory.create(formula, order)
-            reducer.reduceBdd(bdd, false)
+            reducer.reduceBdd(bdd)
             nodes += bdd.nodes.size
         }
     }
 
     println("Naive generation, reduced")
-    println("Took ${time.inMilliseconds} ms")
+    println("Took ${time.inWholeMilliseconds} ms")
     println("Created $nodes nodes total")
 }
 
 @ExperimentalTime
-fun synSimReduced(reducer: BddReducer, parsed: List<Formula>) {
+fun synSimReduced(parsed: List<Formula>) {
     var nodes = 0
     val time = measureTime {
         parsed.forEach { formula ->
             val order = formula.computeVarWeights(Int.MAX_VALUE).toList().sortedByDescending { it.second }.map { it.first }
             val bdd = BddBuilder.create(formula, order)
-            reducer.reduceBdd(bdd, false)
+            BddReducer.reduceBdd(bdd)
             nodes += bdd.nodes.size
         }
     }
 
     println("Syntactic simplification, reduced")
-    println("Took ${time.inMilliseconds} ms")
+    println("Took ${time.inWholeMilliseconds} ms")
     println("Created $nodes nodes total")
 }
