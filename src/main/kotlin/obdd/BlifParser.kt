@@ -58,7 +58,10 @@ object BlifParser {
         /*println("Inputs: ${inputVars.joinToString(", ")}")
         println("Outputs: ${outputVars.joinToString(", ")}")*/
 
-        return Pair(inputVars, outputVars.map { Pair(it, gateToFormula(it)) })
+        val res = Pair(inputVars, outputVars.map { Pair(it, gateToFormula(it)) })
+        wireFormulas.clear()
+        gates.clear()
+        return res
     }
 
     private fun gateToFormula(wireName: String) : Formula {

@@ -31,7 +31,7 @@ object BddReducer {
                         bdd.rootNode = node.zeroChild // set new root node
                     } else {
                         // update links to parents
-                        for (parent in parentMap.getOrDefault(node, mutableListOf())) {
+                        parentMap.getOrDefault(node, mutableListOf()).forEach { parent ->
                             parentMap[node.zeroChild]!!.remove(node)
                             parentMap[node.zeroChild]!!.add(parent)
                             if (parent.zeroChild === node)

@@ -27,7 +27,7 @@ class BddOrderHeuristics(val formula: Formula) {
     }
 
     fun subGraphComplexity(): List<String> {
-        val variables = variables.toMutableSet()
+        val variables = varCount().toMutableList()
         val order = mutableListOf<String>()
         var simplified = formula
         var newSimplified = simplified

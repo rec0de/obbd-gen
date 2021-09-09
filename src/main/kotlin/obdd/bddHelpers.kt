@@ -16,7 +16,7 @@ fun getNodesByLevel(bdd: Bdd): Array<MutableSet<BddNode>> {
 
 fun extractSubtree(startNode: BddNode, untilLevel: Int) : Set<BddNode> {
     val subtree = mutableSetOf<BddNode>()
-    val worklist = mutableSetOf<BddNode>(startNode)
+    val worklist = mutableSetOf(startNode)
 
     while(worklist.isNotEmpty()) {
         val node = worklist.first()
