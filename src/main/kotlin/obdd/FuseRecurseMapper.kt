@@ -3,6 +3,7 @@ package obdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
 import de.tu_darmstadt.rs.logictool.common.representation.Variable
+import obdd.bdd.Sifter
 import obdd.logic.*
 import kotlin.math.ceil
 import kotlin.math.log2

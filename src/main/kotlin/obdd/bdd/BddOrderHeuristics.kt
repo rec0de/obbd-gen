@@ -1,6 +1,7 @@
-package obdd
+package obdd.bdd
 
 import obdd.logic.Formula
+import obdd.simplifyNonce
 
 class BddOrderHeuristics(val formula: Formula) {
     private val counts = formula.computeVarCounts()

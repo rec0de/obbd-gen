@@ -1,6 +1,7 @@
 package obdd
 
 import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
+import obdd.bdd.*
 import obdd.serializers.DotSerializer
 import obdd.serializers.JsonSerializer
 import java.io.File

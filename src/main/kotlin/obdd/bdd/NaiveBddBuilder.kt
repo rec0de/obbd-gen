@@ -1,4 +1,4 @@
-package obdd
+package obdd.bdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode

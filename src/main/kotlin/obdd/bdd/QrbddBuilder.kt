@@ -1,4 +1,4 @@
-package obdd
+package obdd.bdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
@@ -6,6 +6,7 @@ import de.tu_darmstadt.rs.logictool.common.representation.Variable
 import obdd.logic.ConstFalse
 import obdd.logic.ConstTrue
 import obdd.logic.Formula
+import obdd.simplifyNonce
 
 
 object QrbddBuilder : RecursiveSplitBddBuilder() {

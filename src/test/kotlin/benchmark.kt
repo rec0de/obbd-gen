@@ -1,9 +1,9 @@
 package obdd.test
 
 import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
-import obdd.BddBuilder
+import obdd.bdd.BddBuilder
 import obdd.FormulaConverter
-import obdd.NaiveBddBuilder
+import obdd.bdd.NaiveBddBuilder
 import obdd.logic.Formula
 import java.io.File
 import kotlin.time.ExperimentalTime

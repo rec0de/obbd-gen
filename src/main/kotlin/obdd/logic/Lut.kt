@@ -1,6 +1,6 @@
 package obdd.logic
 
-import obdd.BddOrderHeuristics
+import obdd.bdd.BddOrderHeuristics
 import obdd.simplifyNonce
 
 class Lut(private var inputWires: Array<String>, private val outputWire: String, private val emulateFormula: Formula) {

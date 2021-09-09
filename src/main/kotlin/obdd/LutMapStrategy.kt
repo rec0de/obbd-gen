@@ -1,7 +1,10 @@
 package obdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
-import de.tu_darmstadt.rs.logictool.bdd.tools.BddReducer
+import obdd.bdd.BddCutoffReached
+import obdd.bdd.BddOrderHeuristics
+import obdd.bdd.QrbddBuilder
+import obdd.bdd.QrbddReducer
 import obdd.logic.*
 import obdd.serializers.DotSerializer
 import kotlin.system.measureTimeMillis
@@ -48,7 +51,7 @@ abstract class LutMapStrategy {
             try {
                 val candidate = QrbddBuilder.create(formula, orders[i])
                 val preSize = candidate.nodes.size
-                BddReducer().reduceBdd(candidate, true)
+                QrbddReducer.reduceBdd(candidate)
                 log("Trying order #$i for a initial size of ${candidate.nodes.size} nodes", 2)
                 if(candidate.nodes.size < bestSize) {
                     bdd = candidate

@@ -1,8 +1,9 @@
-package obdd
+package obdd.bdd
 
 import de.tu_darmstadt.rs.logictool.bdd.representation.Bdd
 import de.tu_darmstadt.rs.logictool.bdd.representation.BddNode
 import de.tu_darmstadt.rs.logictool.common.representation.Variable
+import obdd.getNodesByLevel
 
 class Sifter(private val bdd: Bdd) {
 
