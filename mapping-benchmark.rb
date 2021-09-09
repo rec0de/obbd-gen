@@ -84,6 +84,8 @@ end
 def genFusemapRegular
 	results = {}
 	outpath = "benchmark/mapping/fusemap/"
+	`rm #{outpath}*.blif`
+
 	getBenchmarkFiles.each { |title, path|
 		puts "Running fusemap mapping for #{title}..."
 		output = ""
@@ -128,10 +130,10 @@ end
 #abc = genABCregular()
 #abcDelay = genABCdelay()
 #abcIsolated = genABCisolated()
-#fusemap = genFusemapRegular()
-fusemapAgressive = genFusemapAgressive()
+fusemap = genFusemapRegular()
+#fusemapAgressive = genFusemapAgressive()
 
 #puts JSON.dump(abc)
 #puts JSON.dump(abcDelay)
 #puts JSON.dump(abcIsolated)
-puts JSON.dump(fusemapAgressive)
+puts JSON.dump(fusemap)
