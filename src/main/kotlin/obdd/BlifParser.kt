@@ -47,6 +47,7 @@ object BlifParser {
                     val parts = line.removePrefix(".latch").trim().split(' ').filter { it.isNotEmpty() }
                     outputVars.add(parts[0])
                     inputVars.add(parts[1])
+                    outputVars.remove(parts[1])
                 }
                 line.startsWith(".model") || line.startsWith(".wire_load_slope") -> { } // We don't really care about the model name or wire models
                 line.startsWith(".end") -> break // We'll only read the first model of the file (TODO?)
