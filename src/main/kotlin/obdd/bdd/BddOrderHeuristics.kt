@@ -7,12 +7,15 @@ class BddOrderHeuristics(val formula: Formula) {
     private val counts = formula.computeVarCounts()
     val variables = counts.keys
 
+    private val varWeights by lazy {
+        formula.computeVarWeights()
+    }
+
     fun mix(): List<List<String>> {
         return listOf(varCount(), subGraphComplexity(), weightCountHybrid(), weightCountHybrid(1000000), varWeight())
     }
 
     fun varWeight(): List<String> {
-        val varWeights = formula.computeVarWeights(Int.MAX_VALUE)
         return varWeights.toList().sortedByDescending { it.second }.map { it.first }
     }
 
@@ -21,7 +24,6 @@ class BddOrderHeuristics(val formula: Formula) {
     }
 
     fun weightCountHybrid(weightFactor: Int = 10000000): List<String> {
-        val varWeights = formula.computeVarWeights(Int.MAX_VALUE)
         val varScores = counts.mapValues { it.value.toLong() * weightFactor + varWeights[it.key]!! }
         return varScores.toList().sortedByDescending { it.second }.map { it.first }
     }

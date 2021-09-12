@@ -14,8 +14,20 @@ abstract class Formula {
         return simplified!!
     }
 
-    abstract fun computeVarWeights(baseWeight: Int): MutableMap<String, Int>
-    abstract fun computeVarCounts(): Map<String, Int>
+    fun computeVarWeights(): Map<String, Int> {
+        val map = mutableMapOf<String, Int>()
+        computeVarWeights(Int.MAX_VALUE, map)
+        return map
+    }
+
+    fun computeVarCounts(): Map<String, Int> {
+        val map = mutableMapOf<String, Int>()
+        computeVarCounts(map)
+        return map
+    }
+
+    open fun computeVarWeights(baseWeight: Int, map: MutableMap<String, Int>) {}
+    open fun computeVarCounts(map: MutableMap<String, Int>) {}
     open fun size(): Int = 1
     abstract fun synEq(other: Formula): Boolean
 
@@ -45,8 +57,13 @@ class Var(val name: String) : Formula() {
         return other is Var && other.name == name
     }
 
-    override fun computeVarWeights(baseWeight: Int) = mutableMapOf(name to baseWeight)
-    override fun computeVarCounts() = mapOf(name to 1)
+    override fun computeVarWeights(baseWeight: Int, map: MutableMap<String, Int>){
+        map.merge(name, baseWeight) { a, b -> a + b }
+    }
+
+    override fun computeVarCounts(map: MutableMap<String, Int>) {
+        map.merge(name, 1){ a, b -> a + b}
+    }
     override fun toString() = name
 }
 
@@ -55,9 +72,6 @@ object ConstTrue : Formula() {
     override fun internalSimplify(varName: String, interpretation: Boolean) = this
 
     override fun synEq(other: Formula) = other == this
-
-    override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
-    override fun computeVarCounts() = mapOf<String,Int>()
     override fun toString() = "true"
 }
 
@@ -66,9 +80,6 @@ object ConstFalse : Formula() {
     override fun internalSimplify(varName: String, interpretation: Boolean) = this
 
     override fun synEq(other: Formula) = other == this
-
-    override fun computeVarWeights(baseWeight: Int) = mutableMapOf<String,Int>()
-    override fun computeVarCounts() = mapOf<String,Int>()
     override fun toString() = "false"
 }
 
@@ -86,35 +97,21 @@ class Not(val child: Formula) : Formula() {
 
     override fun synEq(other: Formula) = other is Not && child.synEq(other.child)
 
-    override fun computeVarWeights(baseWeight: Int) = child.computeVarWeights(baseWeight)
-    override fun computeVarCounts() = child.computeVarCounts()
+    override fun computeVarWeights(baseWeight: Int, map: MutableMap<String, Int>) = child.computeVarWeights(baseWeight, map)
+    override fun computeVarCounts(map: MutableMap<String, Int>) = child.computeVarCounts(map)
     override fun size() = 1 + child.size()
     override fun toString() = "!${child}"
 }
 
 abstract class BinOp(val left: Formula, val right: Formula) : Formula() {
-    override fun computeVarWeights(baseWeight: Int): MutableMap<String,Int> {
-        val leftWeights = left.computeVarWeights(baseWeight / 2)
-        val rightWeights = right.computeVarWeights(baseWeight / 2)
-
-        rightWeights.forEach {
-            val leftValue = leftWeights.getOrDefault(it.key, 0)
-            leftWeights[it.key] = leftValue + it.value
-        }
-
-        return leftWeights
+    override fun computeVarWeights(baseWeight: Int, map: MutableMap<String, Int>) {
+        left.computeVarWeights(baseWeight / 2, map)
+        right.computeVarWeights(baseWeight / 2, map)
     }
 
-    override fun computeVarCounts() : Map<String,Int> {
-        val leftCounts = left.computeVarCounts().toMutableMap()
-        val rightCounts = right.computeVarCounts()
-
-        rightCounts.forEach {
-            val leftValue = leftCounts.getOrDefault(it.key, 0)
-            leftCounts[it.key] = leftValue + it.value
-        }
-
-        return leftCounts
+    override fun computeVarCounts(map: MutableMap<String, Int>) {
+        left.computeVarCounts(map)
+        right.computeVarCounts(map)
     }
 
     override fun size() = 1 + left.size() + right.size()
