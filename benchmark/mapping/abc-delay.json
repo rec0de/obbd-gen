@@ -1,1 +1,52 @@
-{"apex4":{"e2e":103,"luts":504,"depth":6},"ex5p":{"e2e":77,"luts":351,"depth":5},"seq":{"e2e":124,"luts":636,"depth":6},"apex2":{"e2e":114,"luts":627,"depth":7},"misex3":{"e2e":111,"luts":432,"depth":6},"alu4":{"e2e":153,"luts":472,"depth":6},"pdc":{"e2e":618,"luts":1416,"depth":8},"ex1010":{"e2e":158,"luts":621,"depth":6},"spla":{"e2e":703,"luts":1395,"depth":8},"des":{"e2e":282,"luts":806,"depth":6}}
+{
+  "apex4": {
+    "e2e": 103,
+    "luts": 504,
+    "depth": 6
+  },
+  "ex5p": {
+    "e2e": 77,
+    "luts": 351,
+    "depth": 5
+  },
+  "seq": {
+    "e2e": 124,
+    "luts": 636,
+    "depth": 6
+  },
+  "apex2": {
+    "e2e": 114,
+    "luts": 627,
+    "depth": 7
+  },
+  "misex3": {
+    "e2e": 111,
+    "luts": 432,
+    "depth": 6
+  },
+  "alu4": {
+    "e2e": 153,
+    "luts": 472,
+    "depth": 6
+  },
+  "pdc": {
+    "e2e": 618,
+    "luts": 1416,
+    "depth": 8
+  },
+  "ex1010": {
+    "e2e": 158,
+    "luts": 621,
+    "depth": 6
+  },
+  "spla": {
+    "e2e": 703,
+    "luts": 1395,
+    "depth": 8
+  },
+  "des": {
+    "e2e": 282,
+    "luts": 806,
+    "depth": 6
+  }
+}

@@ -1,1 +1,62 @@
-{"apex4":{"e2e":505,"luts":385,"depth":5,"map":334},"ex5p":{"e2e":314,"luts":149,"depth":3,"map":172},"seq":{"e2e":8789,"luts":1656,"depth":26,"map":8596},"apex2":{"e2e":571682,"luts":377,"depth":22,"map":571482},"misex3":{"e2e":860,"luts":329,"depth":10,"map":670},"alu4":{"e2e":1032,"luts":385,"depth":10,"map":861},"pdc":{"e2e":1577,"luts":354,"depth":10,"map":1312},"ex1010":{"e2e":628,"luts":427,"depth":6,"map":438},"spla":{"e2e":1658,"luts":342,"depth":10,"map":1430},"des":{"e2e":114870,"luts":2321,"depth":10,"map":114500}}
+{
+  "apex4": {
+    "e2e": 507,
+    "luts": 383,
+    "depth": 5,
+    "map": 354
+  },
+  "ex5p": {
+    "e2e": 377,
+    "luts": 151,
+    "depth": 3,
+    "map": 211
+  },
+  "seq": {
+    "e2e": 4897,
+    "luts": 1461,
+    "depth": 20,
+    "map": 4690
+  },
+  "apex2": {
+    "e2e": 52309,
+    "luts": 340,
+    "depth": 19,
+    "map": 52110
+  },
+  "misex3": {
+    "e2e": 656,
+    "luts": 351,
+    "depth": 10,
+    "map": 494
+  },
+  "alu4": {
+    "e2e": 788,
+    "luts": 354,
+    "depth": 10,
+    "map": 631
+  },
+  "pdc": {
+    "e2e": 1619,
+    "luts": 325,
+    "depth": 10,
+    "map": 1393
+  },
+  "ex1010": {
+    "e2e": 605,
+    "luts": 400,
+    "depth": 6,
+    "map": 446
+  },
+  "spla": {
+    "e2e": 1429,
+    "luts": 311,
+    "depth": 9,
+    "map": 1219
+  },
+  "des": {
+    "e2e": 12725,
+    "luts": 1904,
+    "depth": 7,
+    "map": 12496
+  }
+}
