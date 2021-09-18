@@ -22,7 +22,7 @@ object FuseRecurseMapper : LutMapStrategy() {
         // Pre-sift to find good cuts
         val sifter = Sifter(bdd)
         if(quickSift)
-            sifter.siftFirstN(25)
+            sifter.siftFirstN(5)
         else
             sifter.sift()
 
