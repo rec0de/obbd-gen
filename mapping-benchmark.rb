@@ -42,6 +42,40 @@ def genABCregular
 	results
 end
 
+def genABCresyn
+	results = {}
+	outpath = "benchmark/mapping/abc/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running abc-resyn reference mapping for #{title}..."
+		time = Benchmark.measure {
+			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; balance; rewrite; rewrite -z; balance; rewrite -z; balance; if; lutpack; write #{outpath}#{title}.blif"`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depth = getDepth("#{outpath}#{title}.blif")
+
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth}
+	}
+	results
+end
+
+def genABCresyn3
+	results = {}
+	outpath = "benchmark/mapping/abc/"
+	getBenchmarkFiles.each { |title, path|
+		puts "Running abc-resyn3 reference mapping for #{title}..."
+		time = Benchmark.measure {
+			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; balance; resub; resub -K 6; balance; resub -z; resub -z -K 6; balance; resub -z -K 5; balance; if; lutpack; write #{outpath}#{title}.blif"`
+		}
+		luts = countLUTs("#{outpath}#{title}.blif")
+		depth = getDepth("#{outpath}#{title}.blif")
+
+		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
+		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth}
+	}
+	results
+end
+
 def genABCdelay
 	results = {}
 	outpath = "benchmark/mapping/abc-delay/"
@@ -130,10 +164,14 @@ end
 #abc = genABCregular()
 #abcDelay = genABCdelay()
 #abcIsolated = genABCisolated()
-fusemap = genFusemapRegular()
+#abcResyn = genABCresyn()
+#abcResyn3 = genABCresyn3()
+#fusemap = genFusemapRegular()
 #fusemapAgressive = genFusemapAgressive()
 
 #puts JSON.dump(abc)
 #puts JSON.dump(abcDelay)
 #puts JSON.dump(abcIsolated)
-puts JSON.dump(fusemap)
+#puts JSON.dump(abcResyn)
+#puts JSON.dump(abcResyn3)
+#puts JSON.dump(fusemap)
