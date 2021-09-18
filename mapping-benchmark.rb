@@ -124,7 +124,7 @@ def genFusemapRegular
 		puts "Running fusemap mapping for #{title}..."
 		output = ""
 		time = Benchmark.measure {
-			output = `java -jar build/libs/obdd-gen-1.0-SNAPSHOT-all.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
+			output = `java -jar build/libs/obdd-gen-2.0-all.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -139,35 +139,13 @@ def genFusemapRegular
 	results
 end
 
-def genFusemapAgressive
-	results = {}
-	outpath = "benchmark/mapping/fusemap-agressive/"
-	getBenchmarkFiles.each { |title, path|
-		puts "Running fusemap-agressive mapping for #{title}..."
-		output = ""
-		time = Benchmark.measure {
-			output = `java -jar fusemap-agressive.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
-		}
-		luts = countLUTs("#{outpath}#{title}.blif")
-		depth = getDepth("#{outpath}#{title}.blif")
-		mapTime = output.chomp.split("|")[0].to_i
-
-		verification = `abc -c "cec #{outpath}#{title}.blif #{path}"`
-		puts verification =~ /Networks are equivalent/ ? "VERIFICATION OK" : "VERIFICATION FAILURE"
-
-		puts "#{title} completed, #{luts} LUTs, depth #{depth}, #{(time.real * 1000).round}ms end to end"
-		results[title] = {:e2e => (time.real * 1000).round, :luts => luts, :depth => depth, :map => mapTime}
-	}
-	results
-end
 
 #abc = genABCregular()
 #abcDelay = genABCdelay()
 #abcIsolated = genABCisolated()
 #abcResyn = genABCresyn()
 #abcResyn3 = genABCresyn3()
-#fusemap = genFusemapRegular()
-#fusemapAgressive = genFusemapAgressive()
+fusemap = genFusemapRegular()
 
 #puts JSON.dump(abc)
 #puts JSON.dump(abcDelay)
