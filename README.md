@@ -7,6 +7,10 @@ obdd-gen is a too to generate Ordered Binary Decision Diagrams or (O)BDDs from b
 To build an executable jar, run
 `gradle assemble && gradle shadowJar`. The executable will be located in `build/libs/`.  
 
+## Formula Input
+
+The boolean formula input format looks like this: `!(a -> b) & (c <=> d | e) ^ !a`. The usual associativity and precedence rules apply.
+
 ## BDD / QRBDD Generation
 
 Builds a BDD from the given boolean formula, producing a DOT graph or JSON representation of the BDD.
@@ -36,6 +40,7 @@ LUT mapping maps a BLIF input file to an equivalent BLIF output that is composed
 ```
 java -jar obdd-gen.jar --blif-map [flags] [input.blif]
 Flags:
+--lutcap=[n]        Set maximum LUT input size (default 5)
 --loglevel=[0-5]    Set verbosity 5=silent 0=full default 4
 --out=[path]        Output location, default mapped.blif
 ```
