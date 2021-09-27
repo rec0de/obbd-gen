@@ -22,6 +22,7 @@ fun main(args: Array<String>) {
         println("--order=[none|weight|count|subgraph|a,b,c]\tSpecify variable evaluation order (default: weight)")
         println("--out=[path]\tWrite output to this location (default: bdd.dot / bdd.json)")
         println("\nobdd-gen --blif-map [flags] [blif file]")
+        println("--lutcap=[n]\tMaximum LUT input size (default: 5)")
         println("--out=[path]\tWrite output to this location (default: mapped.blif)")
         println("--loglevel=[0-4]\tLog less (4) or more (0) progress information")
         return
@@ -33,6 +34,10 @@ fun main(args: Array<String>) {
     }
 
     if(flags.contains("--blif-map")) {
+        FuseRecurseMapper.lutCap = when(val lutFlag = flags.firstOrNull{ it.startsWith("--lutcap=") }) {
+            null -> 5
+            else -> lutFlag.removePrefix("--lutcap=").toInt()
+        }
         val res = FuseRecurseMapper.mapBLIF(other.first())
         val filename = when(val outFlag = flags.firstOrNull{ it.startsWith("--out=") }) {
             null -> "mapped.blif"

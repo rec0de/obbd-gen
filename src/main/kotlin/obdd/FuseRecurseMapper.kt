@@ -13,7 +13,7 @@ import kotlin.math.min
 object FuseRecurseMapper : LutMapStrategy() {
 
     override val strategyName = "fusemap"
-    private const val lutCap = 5
+    var lutCap = 5
 
     override fun mapQRBDD(bdd: Bdd, outputName: String) = mapQRBDDInternal(bdd, outputName, false)
 
@@ -22,7 +22,7 @@ object FuseRecurseMapper : LutMapStrategy() {
         // Pre-sift to find good cuts
         val sifter = Sifter(bdd)
         if(quickSift)
-            sifter.siftFirstN(5)
+            sifter.siftFirstN(lutCap)
         else
             sifter.sift()
 

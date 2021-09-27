@@ -4,11 +4,14 @@ require 'json'
 results = {}
 abc = {}
 
-def countLUTs(filename, largesize=5, smallsize=3)
-	lutsizes = File.readlines(filename).filter{ |l| l.start_with?(".names") }.map { |l| (l.split(" ").length - 2) <= smallsize ? smallsize : largesize }
+$smallsize = 3
+$largesize = 5
+
+def countLUTs(filename)
+	lutsizes = File.readlines(filename).filter{ |l| l.start_with?(".names") }.map { |l| (l.split(" ").length - 2) <= $smallsize ? $smallsize : $largesize }
 	tally = lutsizes.uniq.map { |s| [s, lutsizes.count(s)] }.to_h
-	large = tally[largesize] ? tally[largesize] : 0
-	small = tally[smallsize] ? tally[smallsize] : 0
+	large = tally[$largesize] ? tally[$largesize] : 0
+	small = tally[$smallsize] ? tally[$smallsize] : 0
 	large + small / 2
 end
 
@@ -31,7 +34,7 @@ def genABCregular
 	getBenchmarkFiles.each { |title, path|
 		puts "Running abc reference mapping for #{title}..."
 		time = Benchmark.measure {
-			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
+			`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -48,7 +51,7 @@ def genABCresyn
 	getBenchmarkFiles.each { |title, path|
 		puts "Running abc-resyn reference mapping for #{title}..."
 		time = Benchmark.measure {
-			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; balance; rewrite; rewrite -z; balance; rewrite -z; balance; if; lutpack; write #{outpath}#{title}.blif"`
+			`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read #{path}; balance; rewrite; rewrite -z; balance; rewrite -z; balance; if; lutpack; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -65,7 +68,7 @@ def genABCresyn3
 	getBenchmarkFiles.each { |title, path|
 		puts "Running abc-resyn3 reference mapping for #{title}..."
 		time = Benchmark.measure {
-			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; balance; resub; resub -K 6; balance; resub -z; resub -z -K 6; balance; resub -z -K 5; balance; if; lutpack; write #{outpath}#{title}.blif"`
+			`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read #{path}; balance; resub; resub -K 6; balance; resub -z; resub -z -K 6; balance; resub -z -K 5; balance; if; lutpack; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -82,7 +85,7 @@ def genABCdelay
 	getBenchmarkFiles.each { |title, path|
 		puts "Running abc-delay reference mapping for #{title}..."
 		time = Benchmark.measure {
-			`abc -c "read_lut benchmark/mapping/library-delay.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
+			`abc -c "read_lut benchmark/mapping/library-delay#{$largesize}.lut; read #{path}; if; lutpack; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depthOutput = `abc -c "read #{outpath}#{title}.blif; print_level;"`
@@ -100,7 +103,7 @@ def genABCfpga
 	getBenchmarkFiles.each { |title, path|
 		puts "Running abc-fpga reference mapping for #{title}..."
 		time = Benchmark.measure {
-			`abc -c "read_lut benchmark/mapping/library.lut; read #{path}; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; write #{outpath}#{title}.blif"`
+			`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read #{path}; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; choice; if; ps; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depthOutput = `abc -c "read #{outpath}#{title}.blif; print_level;"`
@@ -125,7 +128,7 @@ def genABCisolated
 		outputs.each { |out|
 		 	isolated = blif.sub(outputLine, ".outputs #{out}")
 		 	File.open("/tmp/isolated.blif", "w") { |file| file.puts(isolated) }
-		 	`abc -c "read_lut benchmark/mapping/library.lut; read /tmp/isolated.blif; if; lutpack; write #{outpath}#{title}-#{out}.blif"`
+		 	`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read /tmp/isolated.blif; if; lutpack; write #{outpath}#{title}-#{out}.blif"`
 		 	luts += countLUTs("#{outpath}#{title}-#{out}.blif")
 		}
 		results[title] = {:e2e => 0, :luts => luts, :depth => 0}
@@ -142,7 +145,7 @@ def genFusemapRegular
 		puts "Running fusemap mapping for #{title}..."
 		output = ""
 		time = Benchmark.measure {
-			output = `java -jar build/libs/obdd-gen-2.0-all.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
+			output = `java -jar build/libs/obdd-gen-2.0-all.jar --blif-map --lutcap=#{$largesize} --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -167,8 +170,8 @@ def genFusemapLutpack
 		puts "Running fusemap mapping for #{title}..."
 		output = ""
 		time = Benchmark.measure {
-			output = `java -jar build/libs/obdd-gen-2.0-all.jar --blif-map --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
-			`abc -c "read_lut benchmark/mapping/library.lut; read #{outpath}#{title}.blif; lutpack; write #{outpath}#{title}.blif"`
+			output = `java -jar build/libs/obdd-gen-2.0-all.jar --blif-map --lutcap=#{$largesize} --loglevel=5 --out=#{outpath}#{title}.blif #{path}`
+			`abc -c "read_lut benchmark/mapping/library#{$largesize}.lut; read #{outpath}#{title}.blif; lutpack; write #{outpath}#{title}.blif"`
 		}
 		luts = countLUTs("#{outpath}#{title}.blif")
 		depth = getDepth("#{outpath}#{title}.blif")
@@ -183,20 +186,20 @@ def genFusemapLutpack
 	results
 end
 
-#abc = genABCregular()
+abc = genABCregular()
 #abcDelay = genABCdelay()
 #abcIsolated = genABCisolated()
 #abcResyn = genABCresyn()
 #abcResyn3 = genABCresyn3()
 #abcFpga = genABCfpga()
 #fusemap = genFusemapRegular()
-#fusemapPack = genFusemapLutpack()
+fusemapPack = genFusemapLutpack()
 
-#puts JSON.dump(abc)
+puts JSON.dump(abc)
 #puts JSON.dump(abcDelay)
 #puts JSON.dump(abcIsolated)
 #puts JSON.dump(abcResyn)
 #puts JSON.dump(abcResyn3)
 #puts JSON.dump(abcFpga)
 #puts JSON.dump(fusemap)
-#puts JSON.dump(fusemapPack)
+puts JSON.dump(fusemapPack)

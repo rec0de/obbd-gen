@@ -9,9 +9,8 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
     }
 
     @OptIn(ExperimentalUnsignedTypes::class)
-    fun toBLIF(lutSizes: List<Int>, placeholder: String): String {
-        val paddedSize = lutSizes.filter { it >= inputWires.size }.minOrNull()
-            ?: throw Exception("No suitable LUT type available for ${inputWires.size} inputs")
+    fun toBLIF(): String {
+        val paddedSize = inputWires.size // disable padding
 
         if(inputWires.size > 16)
             throw Exception("LUT is too large to be converted to cubes (max 16 inputs, got ${inputWires.size})")
@@ -23,7 +22,7 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
         // this appears to only have a tiny effect but I think it's cool that we can re-use the heuristic here so I'll leave it in
         inputWires = BddOrderHeuristics(emulateFormula).subGraphComplexity().toTypedArray()
 
-        val paddedInputs = inputWires.joinToString(" ") + " $placeholder".repeat(paddedSize - inputWires.size)
+        val paddedInputs = inputWires.joinToString(" ")
         val header = ".names $paddedInputs $outputWire\n"
         val onLines = formulaToCubeSet().map { cubeToBlifLine(it, paddedSize) }
 
@@ -69,7 +68,7 @@ class Lut(private var inputWires: Array<String>, private val outputWire: String,
             }
         }
 
-        line += "-".repeat (padToSize - inputWires.size)
+        //line += "-".repeat (padToSize - inputWires.size)
 
         return "$line 1"
     }
