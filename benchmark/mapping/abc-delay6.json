@@ -1,0 +1,52 @@
+{
+  "apex4": {
+    "e2e": 262,
+    "luts": 397,
+    "depth": 5
+  },
+  "ex5p": {
+    "e2e": 111,
+    "luts": 221,
+    "depth": 5
+  },
+  "seq": {
+    "e2e": 409,
+    "luts": 450,
+    "depth": 5
+  },
+  "apex2": {
+    "e2e": 376,
+    "luts": 482,
+    "depth": 6
+  },
+  "misex3": {
+    "e2e": 535,
+    "luts": 314,
+    "depth": 5
+  },
+  "alu4": {
+    "e2e": 1003,
+    "luts": 343,
+    "depth": 5
+  },
+  "pdc": {
+    "e2e": 2352,
+    "luts": 1080,
+    "depth": 7
+  },
+  "ex1010": {
+    "e2e": 182,
+    "luts": 458,
+    "depth": 5
+  },
+  "spla": {
+    "e2e": 3119,
+    "luts": 1004,
+    "depth": 7
+  },
+  "des": {
+    "e2e": 551,
+    "luts": 501,
+    "depth": 5
+  }
+}
