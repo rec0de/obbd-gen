@@ -1,6 +1,6 @@
 # obdd-gen
 
-obdd-gen is a too to generate Ordered Binary Decision Diagrams or (O)BDDs from boolean logic formulas. Additionally, obdd-gen includes an experimental tool for LUT-mapping based on QRBDDs.
+obdd-gen is a tool to generate Ordered Binary Decision Diagrams or (O)BDDs from boolean logic formulas. Additionally, obdd-gen includes an experimental tool for LUT-mapping based on QRBDDs.
 
 ## Building
 
